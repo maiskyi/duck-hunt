@@ -1,6 +1,8 @@
 import { FC, PropsWithChildren } from "react";
 import styles from "./layout.module.scss";
 
+import { Score } from "./_partitions/Score";
+
 type BaseLayoutProps = PropsWithChildren;
 
 const BaseLayout: FC<BaseLayoutProps> = ({ children }) => {
@@ -11,6 +13,8 @@ const BaseLayout: FC<BaseLayoutProps> = ({ children }) => {
       <div className={styles.groundbar}>
         <span>CLICK THE DUCK</span>
       </div>
+      <div className={styles.vignette} />
+      <Score />
       {children}
     </div>
   );
