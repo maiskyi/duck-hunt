@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class DuckShootRequest {
+export class DuckShootPayload {
   @ApiProperty({
     type: String,
   })
@@ -22,7 +22,7 @@ export class DuckShootRequest {
   public at: number;
 }
 
-export class DuckHitResponse {
+export class DuckHitPayload {
   @ApiProperty({
     type: String,
   })

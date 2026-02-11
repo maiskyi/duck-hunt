@@ -9,7 +9,7 @@ import { Server, Socket } from 'socket.io';
 import { DuckHuntEvent } from '../../types';
 import { AsyncApiPub, AsyncApiSub } from 'nestjs-asyncapi';
 
-import { DuckHitResponse, DuckShootRequest } from './duckShoot.dto';
+import { DuckHitPayload, DuckShootPayload } from './duckShoot.dto';
 
 export class DuckShootGateway extends BaseGateway {
   @WebSocketServer()
@@ -19,11 +19,11 @@ export class DuckShootGateway extends BaseGateway {
   @AsyncApiPub({
     channel: DuckHuntEvent.DuckShoot,
     message: {
-      payload: DuckShootRequest,
+      payload: DuckShootPayload,
     },
   })
   public onShoot(
-    @MessageBody() body: DuckShootRequest,
+    @MessageBody() body: DuckShootPayload,
     @ConnectedSocket() client: Socket,
   ) {
     return this.onShotEmit(body, client);
@@ -32,10 +32,10 @@ export class DuckShootGateway extends BaseGateway {
   @AsyncApiSub({
     channel: DuckHuntEvent.DuckHit,
     message: {
-      payload: DuckHitResponse,
+      payload: DuckHitPayload,
     },
   })
-  private onShotEmit(body: DuckShootRequest, client: Socket) {
+  private onShotEmit(body: DuckShootPayload, client: Socket) {
     this.server.emit(DuckHuntEvent.DuckHit, {
       id: body.id,
       by: client.id,
