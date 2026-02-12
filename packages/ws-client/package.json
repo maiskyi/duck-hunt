@@ -8,10 +8,9 @@
   "scripts": {
     "lint": "eslint . --max-warnings 0",
     "check-types": "tsc --noEmit",
-    "gen:api": "asyncapi generate models typescript http://localhost:3001/asyncapi.json --output ./src/__generated__/models --tsIncludeComments --tsExportType named"
+    "gen:client": "curl -o src/asyncapi.json http://localhost:3001/asyncapi.json -H 'Accept: application/json' && codegen generate ./codegen.config.ts"
   },
   "devDependencies": {
-    "@asyncapi/cli": "^6.0.0",
     "@repo/eslint-config": "*",
     "@repo/typescript-config": "*",
     "@types/node": "^22.15.3",
@@ -21,6 +20,7 @@
     "typescript": "5.9.2"
   },
   "dependencies": {
+    "@the-codegen-project/cli": "^0.64.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "use-socket-io-react": "^0.2.1"
