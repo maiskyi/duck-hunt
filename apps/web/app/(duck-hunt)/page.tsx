@@ -16,7 +16,6 @@ const DuckHuntPage = () => {
       <div className={styles.vignette} />
       <Score />
       <Clouds />
-      {/* {children} */}
     </div>
   );
 }
