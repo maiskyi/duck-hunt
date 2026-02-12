@@ -98,9 +98,16 @@
     color: #555;
     font-size: 16px;
   }
-  
+
   .scoreTotal {
     color: #ffdd00;
     font-size: 16px;
   }
+}
+
+.cloud {
+  position: absolute;
+  height: 28px;
+  opacity: 0.85;
+  pointer-events: none;
 }

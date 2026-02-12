@@ -2,6 +2,7 @@ import { FC, PropsWithChildren } from "react";
 import styles from "./layout.module.scss";
 
 import { Score } from "./_partitions/Score";
+import { Clouds } from "./_partitions/Clouds";
 
 type BaseLayoutProps = PropsWithChildren;
 
@@ -15,6 +16,7 @@ const BaseLayout: FC<BaseLayoutProps> = ({ children }) => {
       </div>
       <div className={styles.vignette} />
       <Score />
+      <Clouds />
       {children}
     </div>
   );
