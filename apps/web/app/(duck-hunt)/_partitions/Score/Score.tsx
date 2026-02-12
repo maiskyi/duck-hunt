@@ -1,6 +1,6 @@
 import { FC } from "react";
 
-import styles from "../../layout.module.scss";
+import styles from "../../page.module.scss";
 
 export const Score: FC = () => {
   const hits = 0;

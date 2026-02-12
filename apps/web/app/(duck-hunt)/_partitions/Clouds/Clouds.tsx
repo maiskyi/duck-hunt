@@ -3,7 +3,7 @@
 import { useLayoutEffect, useRef, useState } from "react";
 
 import { CLOUDS } from "./Clouds.const";
-import styles from "../../layout.module.scss";
+import styles from "../../page.module.scss";
 
 export const Clouds = () => {
   const interval = useRef<NodeJS.Timeout | null>(null);
