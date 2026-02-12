@@ -4,7 +4,7 @@ import { Scenery } from "./_partitions/Scenery";
 import { Score } from "./_partitions/Score";
 import { Clouds } from "./_partitions/Clouds";
 
-export default function Home() {
+const DuckHuntPage = () => {
   return (
     <div className={styles.root}>
       <div className={styles.scanline} />
@@ -20,3 +20,5 @@ export default function Home() {
     </div>
   );
 }
+
+export default DuckHuntPage;
