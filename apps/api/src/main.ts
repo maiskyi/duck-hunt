@@ -7,7 +7,7 @@ async function bootstrap() {
 
   const asyncApiOptions = new AsyncApiDocumentBuilder()
     .setTitle('Duck Hunt')
-    .setDescription('Duck Hunt server description here')
+    .setDescription('Duck Hunt server')
     .setVersion('1.0')
     .setDefaultContentType('application/json')
     .addSecurity('user-password', { type: 'userPassword' })
@@ -18,6 +18,10 @@ async function bootstrap() {
     .build();
 
   const asyncapiDocument = AsyncApiModule.createDocument(app, asyncApiOptions);
+
+  app.getHttpAdapter().get('/asyncapi.json', (req, res) => {
+    res.type('application/json').send(asyncapiDocument);
+  });
 
   await AsyncApiModule.setup('/', app, asyncapiDocument);
 

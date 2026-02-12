@@ -2,6 +2,8 @@ import { WebSocketGateway } from '@nestjs/websockets';
 
 @WebSocketGateway({
   namespace: 'duck-hunt',
-  transports: ['websocket'],
+  cors: {
+    origin: '*',
+  },
 })
 export class BaseGateway {}
