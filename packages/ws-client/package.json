@@ -8,9 +8,10 @@
   "scripts": {
     "lint": "eslint . --max-warnings 0",
     "check-types": "tsc --noEmit",
-    "gen:api": "asyncapi generate models typescript http://localhost:3001/asyncapi.json --output .src/__generated__"
+    "gen:api": "asyncapi generate models typescript http://localhost:3001/asyncapi.json --output ./src/__generated__/models --tsIncludeComments --tsExportType named"
   },
   "devDependencies": {
+    "@asyncapi/cli": "^6.0.0",
     "@repo/eslint-config": "*",
     "@repo/typescript-config": "*",
     "@types/node": "^22.15.3",

@@ -22,7 +22,7 @@ export class DuckShootPayload {
   public at: number;
 }
 
-export class DuckHitPayload {
+export class DuckHitMessage {
   @ApiProperty({
     type: String,
   })
