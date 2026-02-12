@@ -11,7 +11,7 @@ const DuckHuntPage = () => {
       <div className={styles.title}>DUCK HUNT</div>
       <Scenery />
       <div className={styles.groundbar}>
-        <span>CLICK THE DUCK</span>
+        <span>Click the duck</span>
       </div>
       <div className={styles.vignette} />
       <Score />
