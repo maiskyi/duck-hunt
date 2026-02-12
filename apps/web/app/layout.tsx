@@ -4,7 +4,7 @@ import { WsClientProvider } from "@repo/ws-client";
 import "./global.scss";
 
 const ENV = {
-  API_HOST: "http://localhost:3001",
+  API_HOST: "http://localhost:3001/duck-hunt",
 };
 
 const pressStart2P = Press_Start_2P({

@@ -1,1 +1,1 @@
-export * from './duckHuntEvent.type';
+export * from './duckHuntTopic.type';

@@ -3,10 +3,10 @@ import {
   MessageBody,
   SubscribeMessage,
 } from '@nestjs/websockets';
-import { BaseGateway } from '../base.gateway';
+import { BaseGateway } from '../base';
 import { WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { DuckHuntEvent } from '../../types';
+import { DuckHuntTopic } from '../../types';
 import { AsyncApiPub, AsyncApiSub } from 'nestjs-asyncapi';
 
 import { DuckHitPayload, HitConfirmedMessage, HitRejectedMessage } from '../../dto';
@@ -15,9 +15,9 @@ export class DuckHitGateway extends BaseGateway {
   @WebSocketServer()
   private server: Server;
 
-  @SubscribeMessage(DuckHuntEvent.DuckHit)
+  @SubscribeMessage(DuckHuntTopic.DuckHit)
   @AsyncApiPub({
-    channel: DuckHuntEvent.DuckHit,
+    channel: DuckHuntTopic.DuckHit,
     message: {
       payload: DuckHitPayload,
     },
@@ -30,42 +30,42 @@ export class DuckHitGateway extends BaseGateway {
   }
 
   @AsyncApiSub({
-    channel: DuckHuntEvent.DuckHit,
+    channel: DuckHuntTopic.DuckHit,
     message: {
       payload: HitConfirmedMessage,
     },
   })
   private onHit(body: DuckHitPayload, client: Socket) {
-    this.server.emit(DuckHuntEvent.DuckHit, {
-      id: body.id,
+    this.server.emit(DuckHuntTopic.DuckHit, {
+      roundId: body.roundId,
       by: client.id,
       at: Date.now(),
     });
   }
 
   @AsyncApiSub({
-    channel: DuckHuntEvent.HitConfirmed,
+    channel: DuckHuntTopic.HitConfirmed,
     message: {
       payload: HitConfirmedMessage,
     },
   })
   private onHitConfirmed(body: DuckHitPayload, client: Socket) {
-    this.server.emit(DuckHuntEvent.DuckHit, {
-      id: body.id,
+    this.server.emit(DuckHuntTopic.DuckHit, {
+      roundId: body.roundId,
       by: client.id,
       at: Date.now(),
     });
   }
 
   @AsyncApiSub({
-    channel: DuckHuntEvent.HitRejected,
+    channel: DuckHuntTopic.HitRejected,
     message: {
       payload: HitRejectedMessage,
     },
   })
   private onHitRejected(body: DuckHitPayload, client: Socket) {
-    this.server.emit(DuckHuntEvent.DuckHit, {
-      id: body.id,
+    this.server.emit(DuckHuntTopic.DuckHit, {
+      roundId: body.roundId,
       by: client.id,
       at: Date.now(),
     });

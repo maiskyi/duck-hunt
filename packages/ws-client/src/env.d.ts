@@ -1,11 +1,10 @@
 import "use-socket-io-react";
+import { GameStartPayload } from "./__generated__/models/GameStartPayload";
 
 declare module "use-socket-io-react" {
-  interface ServerToClientEvents {
-    chat: (message: string, sentAt: number) => void;
-  }
+  interface ServerToClientEvents {}
 
   interface ClientToServerEvents {
-    alert: (content: string) => void;
+    "duck-hunt/game/start": Array<GameStartPayload>;
   }
 }

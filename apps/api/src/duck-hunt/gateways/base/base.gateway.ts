@@ -1,7 +1,7 @@
 import { WebSocketGateway } from '@nestjs/websockets';
 
 @WebSocketGateway({
-  namespace: 'duck-hunt',
+  namespace: '/duck-hunt',
   cors: {
     origin: '*',
   },
