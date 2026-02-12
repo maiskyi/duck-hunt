@@ -1,4 +1,5 @@
 export enum DuckHuntEvent {
-  DuckShoot = 'duck-hunt/duck/shoot',
   DuckHit = 'duck-hunt/duck/hit',
+  HitConfirmed = 'duck-hunt/hit/confirmed',
+  HitRejected = 'duck-hunt/hit/rejected',
 }
