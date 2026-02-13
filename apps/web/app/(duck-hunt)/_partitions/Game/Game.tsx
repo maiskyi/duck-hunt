@@ -11,12 +11,14 @@ export const Game = () => {
 
   const { emit } = useSocketEmit();
 
-  const handleOnRoundStarted: OnRoundStartedHandler =
-    useCallback(([{ roundId }]) => {
-      console.log(roundId);
-    }, []);
+  const handleOnRoundStarted: OnRoundStartedHandler = useCallback(
+    ([{ roundId, path }]) => {
+      console.log(roundId, path);
+    },
+    [],
+  );
 
-  useSocketEvent("duck-hunt/round/started", {
+  useSocketEvent("duck-hunt/round/start", {
     handler: handleOnRoundStarted,
   });
 

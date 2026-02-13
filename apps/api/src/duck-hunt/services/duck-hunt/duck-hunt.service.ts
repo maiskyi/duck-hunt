@@ -143,7 +143,7 @@ export class DuckHuntService {
         clientId,
         reason: DuckHuntRoundEndReason.Timeout,
       });
-      this.scheduleNextRound({ clientId });
+      this.scheduleNextRound({ clientId, onStarted });
     }, FLIGHT_DURATION_MS);
   }
 
@@ -172,14 +172,14 @@ export class DuckHuntService {
     // this.emitToClient?.(socketId, 'stats', { rounds: s.rounds, hits: s.hits });
   }
 
-  private scheduleNextRound({ clientId }: ScheduleNextRoundParams) {
+  private scheduleNextRound({ clientId, onStarted }: ScheduleNextRoundParams) {
     const session = this.sessions.get(clientId);
     if (!session) return;
 
     const delay = random(NEXT_ROUND_MIN_DELAY_MS, NEXT_ROUND_MAX_DELAY_MS);
 
     session.nextRoundTimer = setTimeout(() => {
-      this.startRound({ clientId });
+      this.startRound({ clientId, onStarted });
     }, delay);
   }
 }

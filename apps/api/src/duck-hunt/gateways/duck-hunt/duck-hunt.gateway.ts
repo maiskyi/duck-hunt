@@ -6,18 +6,12 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { BaseGateway } from '../base';
 import { Server, Socket } from 'socket.io';
 import { Logger } from '@nestjs/common';
 import { DuckHuntTopic } from '../../types';
 import { AsyncApiPub, AsyncApiSub } from 'nestjs-asyncapi';
 
-import {
-  DuckHitPayload,
-  GameStartPayload,
-  HitConfirmedMessage,
-  HitRejectedMessage,
-} from '../../dto';
+import { GameStartPayload } from '../../dto';
 import { MessageBody } from '@nestjs/websockets';
 import { DuckHuntService } from '../../services/duck-hunt';
 import type { GameStatsParams, RoundStartParams } from './duck-hunt.types';

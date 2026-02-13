@@ -4,7 +4,7 @@ import { RoundStartedMessage } from "./__generated__/models/RoundStartedMessage"
 
 declare module "use-socket-io-react" {
   interface ServerToClientEvents {
-    "duck-hunt/round/started": (message: RoundStartedMessage) => void;
+    "duck-hunt/round/start": (message: RoundStartedMessage) => void;
   }
 
   interface ClientToServerEvents {

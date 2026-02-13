@@ -3,18 +3,21 @@ import {
   MessageBody,
   SubscribeMessage,
 } from '@nestjs/websockets';
-import { BaseGateway } from '../base';
+// import { BaseGateway } from '../base';
 import { WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { DuckHuntTopic } from '../../types';
 import { AsyncApiPub, AsyncApiSub } from 'nestjs-asyncapi';
 
-import { DuckHitPayload, HitConfirmedMessage, HitRejectedMessage } from '../../dto';
+import {
+  DuckHitPayload,
+  HitConfirmedMessage,
+  HitRejectedMessage,
+} from '../../dto';
 
-export class DuckHitGateway extends BaseGateway {
+export class DuckHitGateway {
   // @WebSocketServer()
   // private server: Server;
-
   // @SubscribeMessage(DuckHuntTopic.DuckHit)
   // @AsyncApiPub({
   //   channel: DuckHuntTopic.DuckHit,
@@ -28,7 +31,6 @@ export class DuckHitGateway extends BaseGateway {
   // ) {
   //   return this.onHit(body, client);
   // }
-
   // @AsyncApiSub({
   //   channel: DuckHuntTopic.DuckHit,
   //   message: {
@@ -42,7 +44,6 @@ export class DuckHitGateway extends BaseGateway {
   //     at: Date.now(),
   //   });
   // }
-
   // @AsyncApiSub({
   //   channel: DuckHuntTopic.HitConfirmed,
   //   message: {
@@ -56,7 +57,6 @@ export class DuckHitGateway extends BaseGateway {
   //     at: Date.now(),
   //   });
   // }
-
   // @AsyncApiSub({
   //   channel: DuckHuntTopic.HitRejected,
   //   message: {

@@ -48,4 +48,5 @@ export interface EndRoundParams {
 
 export interface ScheduleNextRoundParams {
   clientId: string;
+  onStarted?: OnRoundStartedCallback;
 }
