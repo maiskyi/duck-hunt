@@ -2,8 +2,9 @@
 
 import { useLayoutEffect, useRef, useState } from "react";
 
-import { CLOUDS } from "./Clouds.const";
 import styles from "../../page.module.scss";
+
+import { CLOUDS } from "./Clouds.const";
 
 export const Clouds = () => {
   const interval = useRef<NodeJS.Timeout | null>(null);

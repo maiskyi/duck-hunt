@@ -7,6 +7,7 @@ import pluginReact from "eslint-plugin-react";
 import globals from "globals";
 import pluginNext from "@next/eslint-plugin-next";
 import { config as baseConfig } from "./base.js";
+import pluginImport from "eslint-plugin-import";
 
 /**
  * A custom ESLint configuration for libraries that use Next.js.
@@ -32,6 +33,31 @@ export const nextJsConfig = [
       globals: {
         ...globals.serviceworker,
       },
+    },
+  },
+  {
+    plugins: {
+      import: pluginImport,
+    },
+    rules: {
+      "import/order": [
+        "warn",
+        {
+          "newlines-between": "always",
+          pathGroupsExcludedImportTypes: ["react"],
+          warnOnUnassignedImports: true,
+          groups: [
+            "builtin",
+            "external",
+            "parent",
+            "index",
+            "sibling",
+            "object",
+            "type",
+            "internal",
+          ],
+        },
+      ],
     },
   },
   {

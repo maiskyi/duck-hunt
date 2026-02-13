@@ -1,13 +1,14 @@
 "use client";
 
 import { forwardRef, Fragment, useCallback, useImperativeHandle } from "react";
+
 import { DuckInstance } from "./Duck.types";
 
 interface DuckProps {
   onClick: () => void;
 }
 
-export const Duck = forwardRef<DuckInstance, DuckProps>(({ onClick }, ref) => {
+export const Duck = forwardRef<DuckInstance, DuckProps>((_, ref) => {
   const fly = useCallback(() => {
     console.log("Duck is flying");
   }, []);
