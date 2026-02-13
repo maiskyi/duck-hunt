@@ -1,6 +1,7 @@
 export enum DuckHuntTopic {
   GameStart = 'duck-hunt/game/start',
   RoundStart = 'duck-hunt/round/start',
+  RoundEnd = 'duck-hunt/round/end',
 }
 
 export enum DuckHuntPathDirection {

@@ -84,7 +84,7 @@ export class DuckHuntService {
     this.logger.log(`Session removed: ${clientId}`);
   }
 
-  public startRound({ clientId }: StartRoundParams) {
+  public startRound({ clientId, onStarted }: StartRoundParams) {
     const session = this.sessions.get(clientId);
     if (!session) return;
 
@@ -107,6 +107,8 @@ export class DuckHuntService {
 
     session.currentRound = round;
     session.rounds += 1;
+
+    onStarted?.({ clientId, round });
 
     // const startPayload: RoundStartPayload = {
     //   roundId,

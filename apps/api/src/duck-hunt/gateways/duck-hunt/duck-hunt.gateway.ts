@@ -56,7 +56,13 @@ export class DuckHuntGateway
       timestamp,
       clientId,
     });
-    return this.roundStart({ clientId });
+    this.game.startRound({
+      clientId,
+      onStarted: ({ round, clientId }) => {
+        this.roundStart({ round, clientId });
+      },
+    });
+    return { ok: true };
   }
 
   @AsyncApiSub({
@@ -65,14 +71,8 @@ export class DuckHuntGateway
       payload: RoundStartedMessage,
     },
   })
-  private roundStart({ clientId }: RoundStartParams) {
-    this.game.startRound({ clientId });
-    this.server.to(clientId).emit(DuckHuntTopic.RoundStart, {
-      //   roundId: body.roundId,
-      //   by: client.id,
-      //   at: Date.now(),
-    });
-    return { ok: true };
+  private roundStart({ round, clientId }: RoundStartParams) {
+    this.server.to(clientId).emit(DuckHuntTopic.RoundStart, round);
   }
 
   public handleConnection({ id: clientId }: Socket) {
