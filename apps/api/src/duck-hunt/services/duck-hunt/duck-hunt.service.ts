@@ -17,7 +17,12 @@ import {
 } from './duck-hunt.const';
 import { random } from 'lodash';
 import { RoundEndPayload } from '../game/game.types';
-import { DuckHuntPathDirection, DuckHuntRound, DuckHuntRoundEndReason, DuckHuntRoundPath } from '../../types';
+import {
+  DuckHuntPathDirection,
+  DuckHuntRound,
+  DuckHuntRoundEndReason,
+  DuckHuntRoundPath,
+} from '../../types';
 
 @Injectable()
 export class DuckHuntService {
@@ -108,8 +113,6 @@ export class DuckHuntService {
     session.currentRound = round;
     session.rounds += 1;
 
-    onStarted?.({ clientId, round });
-
     // const startPayload: RoundStartPayload = {
     //   roundId,
     //   startedAt,
@@ -119,6 +122,13 @@ export class DuckHuntService {
     // };
 
     this.logger.log(`Round started for ${clientId}: ${roundId}`);
+
+    onStarted?.({
+      clientId,
+      round,
+      rounds: session.rounds,
+      hits: session.hits,
+    });
 
     // this.emitToClient?.(socketId, 'round:start', startPayload);
     // this.emitToClient?.(socketId, 'stats', { rounds: s.rounds, hits: s.hits });

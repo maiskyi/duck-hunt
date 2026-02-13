@@ -24,6 +24,8 @@ export interface RemoveSessionParams {
 interface OnRoundStartedCallbackParams {
   clientId: string;
   round: DuckHuntRound;
+  rounds: number;
+  hits: number;
 }
 
 type OnRoundStartedCallback = (

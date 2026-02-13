@@ -17,11 +17,11 @@ import {
   GameStartPayload,
   HitConfirmedMessage,
   HitRejectedMessage,
-  RoundStartedMessage,
 } from '../../dto';
 import { MessageBody } from '@nestjs/websockets';
 import { DuckHuntService } from '../../services/duck-hunt';
-import type { RoundStartParams } from './duck-hunt.types';
+import type { GameStatsParams, RoundStartParams } from './duck-hunt.types';
+import { RoundStartedMessage } from './duck-hunt.dto';
 
 @WebSocketGateway({
   namespace: '/duck-hunt',
@@ -73,6 +73,16 @@ export class DuckHuntGateway
   })
   private roundStart({ round, clientId }: RoundStartParams) {
     this.server.to(clientId).emit(DuckHuntTopic.RoundStart, round);
+  }
+
+  @AsyncApiSub({
+    channel: DuckHuntTopic.GameStats,
+    message: {
+      payload: RoundStartedMessage,
+    },
+  })
+  private gameStats({ clientId, ...stats }: GameStatsParams) {
+    this.server.to(clientId).emit(DuckHuntTopic.GameStats, stats);
   }
 
   public handleConnection({ id: clientId }: Socket) {
