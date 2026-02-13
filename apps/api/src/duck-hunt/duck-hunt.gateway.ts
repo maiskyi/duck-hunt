@@ -1,7 +1,6 @@
 import {
   ConnectedSocket,
   OnGatewayConnection,
-  OnGatewayInit,
   SubscribeMessage,
   WebSocketServer,
 } from '@nestjs/websockets';
@@ -16,33 +15,25 @@ import {
   GameStartPayload,
   HitConfirmedMessage,
   HitRejectedMessage,
+  RoundStartedMessage,
 } from './dto';
 import { MessageBody } from '@nestjs/websockets';
+import { DuckHuntService } from './services/duck-hunt';
 
 export class DuckHuntGateway
   extends BaseGateway
-  implements OnGatewayInit, OnGatewayConnection
+  implements OnGatewayConnection
 {
+  @WebSocketServer()
+  private server: Server;
+
   private logger = new Logger(DuckHuntGateway.name, {
     timestamp: true,
   });
 
-  @WebSocketServer()
-  private server: Server;
-
-//   @SubscribeMessage(DuckHuntTopic.DuckHit)
-//   @AsyncApiPub({
-//     channel: DuckHuntTopic.DuckHit,
-//     message: {
-//       payload: DuckHitPayload,
-//     },
-//   })
-//   public onShoot(
-//     @MessageBody() body: DuckHitPayload,
-//     @ConnectedSocket() client: Socket,
-//   ) {
-//     return this.onHit(body, client);
-//   }
+  public constructor(private service: DuckHuntService) {
+    super();
+  }
 
   @SubscribeMessage(DuckHuntTopic.GameStart)
   @AsyncApiPub({
@@ -52,56 +43,27 @@ export class DuckHuntGateway
     },
   })
   public onGameStart(
-    @MessageBody() body: GameStartPayload,
+    @MessageBody() { timestamp }: GameStartPayload,
     @ConnectedSocket() client: Socket,
   ) {
-    console.log('onGameStart', body);
+    const { id: clientId } = client;
+    this.logger.log(`Game started`, { timestamp, clientId });
+    return this.roundStarted(client);
   }
 
-//   @AsyncApiSub({
-//     channel: DuckHuntTopic.DuckHit,
-//     message: {
-//       payload: HitConfirmedMessage,
-//     },
-//   })
-//   private onHit(body: DuckHitPayload, client: Socket) {
-//     this.server.emit(DuckHuntTopic.DuckHit, {
-//       roundId: body.roundId,
-//       by: client.id,
-//       at: Date.now(),
-//     });
-//   }
-
-//   @AsyncApiSub({
-//     channel: DuckHuntTopic.HitConfirmed,
-//     message: {
-//       payload: HitConfirmedMessage,
-//     },
-//   })
-//   private onHitConfirmed(body: DuckHitPayload, client: Socket) {
-//     this.server.emit(DuckHuntTopic.DuckHit, {
-//       roundId: body.roundId,
-//       by: client.id,
-//       at: Date.now(),
-//     });
-//   }
-
-//   @AsyncApiSub({
-//     channel: DuckHuntTopic.HitRejected,
-//     message: {
-//       payload: HitRejectedMessage,
-//     },
-//   })
-//   private onHitRejected(body: DuckHitPayload, client: Socket) {
-//     this.server.emit(DuckHuntTopic.DuckHit, {
-//       roundId: body.roundId,
-//       by: client.id,
-//       at: Date.now(),
-//     });
-//   }
-
-  public afterInit(server: Server) {
-    console.log('DuckHuntGateway afterInit');
+  @AsyncApiSub({
+    channel: DuckHuntTopic.RoundStarted,
+    message: {
+      payload: RoundStartedMessage,
+    },
+  })
+  private roundStarted(client: Socket) {
+    client.emit(DuckHuntTopic.RoundStarted, {
+    //   roundId: body.roundId,
+    //   by: client.id,
+    //   at: Date.now(),
+    });
+    return { ok: true };
   }
 
   public handleConnection(client: Socket) {

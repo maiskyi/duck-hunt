@@ -5,6 +5,9 @@ export default {
   generators: [
     {
       preset: "models",
+      options: {
+        modelType: 'interface',
+      },
       outputPath: "./src/__generated__/models",
     },
     {

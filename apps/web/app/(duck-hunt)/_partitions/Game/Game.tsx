@@ -1,24 +1,30 @@
 "use client";
 
 import { useMount } from "react-use";
-import { Models, useSocketEmit, useSocketEvent } from "@repo/ws-client";
-import { Fragment, useRef } from "react";
+import { useSocketEmit, useSocketEvent } from "@repo/ws-client";
+import { Fragment, useCallback, useRef } from "react";
 import { Duck, DuckInstance } from "../Duck";
+import { OnRoundStartedHandler } from "./Game.types";
 
 export const Game = () => {
   const duck = useRef<DuckInstance>(null);
 
   const { emit } = useSocketEmit();
 
-  useSocketEvent('duck-hunt/game/start', {
-    handler: () => {},
+  const handleOnRoundStarted: OnRoundStartedHandler =
+    useCallback(([{ roundId }]) => {
+      console.log(roundId);
+    }, []);
+
+  useSocketEvent("duck-hunt/round/started", {
+    handler: handleOnRoundStarted,
   });
 
   useMount(() => {
     emit("duck-hunt/game/start", [
-      new Models.GameStartPayload({
+      {
         timestamp: Date.now(),
-      }),
+      },
     ]);
   });
 
