@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
+
 import { GAME_CONFIG, randInt } from './game.config';
 import {
   RoundState,
@@ -68,22 +69,27 @@ export class GameService {
     const now = Date.now();
 
     if (!this.currentRound) {
-      return { roundId, reason: 'no_active_round' };
+      return { roundId,
+reason: 'no_active_round' };
     }
     if (this.currentRound.roundId !== roundId) {
       // Either old roundId or client is out-of-sync
-      return { roundId, reason: 'no_active_round' };
+      return { roundId,
+reason: 'no_active_round' };
     }
     if (this.currentRound.ended) {
-      return { roundId, reason: 'already_ended' };
+      return { roundId,
+reason: 'already_ended' };
     }
     if (now > this.currentRound.endsAt) {
-      return { roundId, reason: 'late' };
+      return { roundId,
+reason: 'late' };
     }
 
     // Confirm hit
     this.endRound('hit');
-    return { roundId, hitAt: now };
+    return { roundId,
+hitAt: now };
   }
 
   // ---------------------- internal ----------------------
@@ -144,7 +150,8 @@ export class GameService {
     }
 
     this.logger.log(`Round ended: ${roundId} (${reason})`);
-    this.emitRoundEnd?.({ roundId, reason });
+    this.emitRoundEnd?.({ roundId,
+reason });
   }
 
   private generateDuckPath() {
@@ -162,8 +169,10 @@ export class GameService {
     const endY = Math.max(padding, Math.min(height - padding, endYRaw));
 
     return {
-      start: { x: startX, y },
-      end: { x: endX, y: endY },
+      start: { x: startX,
+y },
+      end: { x: endX,
+y: endY },
       presetId: preset.id,
       direction: preset.direction,
       speedMs: GAME_CONFIG.flightDurationMs,

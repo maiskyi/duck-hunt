@@ -28,9 +28,7 @@ interface OnRoundStartedCallbackParams {
   hits: number;
 }
 
-type OnRoundStartedCallback = (
-  params: OnRoundStartedCallbackParams,
-) => void;
+type OnRoundStartedCallback = (params: OnRoundStartedCallbackParams) => void;
 
 export interface StartRoundParams {
   clientId: string;

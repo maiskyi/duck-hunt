@@ -5,17 +5,19 @@ import {
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
+  MessageBody,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { Logger } from '@nestjs/common';
-import { DuckHuntTopic } from '../../types';
 import { AsyncApiPub, AsyncApiSub } from 'nestjs-asyncapi';
 
+import { DuckHuntTopic } from '../../types';
 import { GameStartPayload } from '../../dto';
-import { MessageBody } from '@nestjs/websockets';
 import { DuckHuntService } from '../../services/duck-hunt';
-import type { GameStatsParams, RoundStartParams } from './duck-hunt.types';
+
 import { RoundStartedMessage } from './duck-hunt.dto';
+
+import type { GameStatsParams, RoundStartParams } from './duck-hunt.types';
 
 @WebSocketGateway({
   namespace: '/duck-hunt',
@@ -53,7 +55,8 @@ export class DuckHuntGateway
     this.game.startRound({
       clientId,
       onStarted: ({ round, clientId }) => {
-        this.roundStart({ round, clientId });
+        this.roundStart({ round,
+clientId });
       },
     });
     return { ok: true };

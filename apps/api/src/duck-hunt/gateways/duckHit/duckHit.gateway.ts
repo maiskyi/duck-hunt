@@ -6,9 +6,9 @@ import {
 // import { BaseGateway } from '../base';
 import { WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { DuckHuntTopic } from '../../types';
 import { AsyncApiPub, AsyncApiSub } from 'nestjs-asyncapi';
 
+import { DuckHuntTopic } from '../../types';
 import {
   DuckHitPayload,
   HitConfirmedMessage,

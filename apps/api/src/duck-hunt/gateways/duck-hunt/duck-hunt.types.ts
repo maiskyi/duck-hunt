@@ -1,4 +1,4 @@
-import { DuckHuntRound } from "../../types";
+import { DuckHuntRound } from '../../types';
 
 export interface RoundStartParams {
   clientId: string;

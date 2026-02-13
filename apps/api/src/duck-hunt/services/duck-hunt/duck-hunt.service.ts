@@ -1,5 +1,21 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { v4 as uuid } from 'uuid';
+import { random } from 'lodash';
+
+import { RoundEndPayload } from '../game/game.types';
+import {
+  DuckHuntPathDirection,
+  DuckHuntRound,
+  DuckHuntRoundEndReason,
+  DuckHuntRoundPath,
+} from '../../types';
+
+import {
+  FLIGHT_DURATION_MS,
+  SHOW_AFTER_HIT_MS,
+  NEXT_ROUND_MIN_DELAY_MS,
+  NEXT_ROUND_MAX_DELAY_MS,
+} from './duck-hunt.const';
 import {
   ClearTimersParams,
   CreateSessionParams,
@@ -9,20 +25,6 @@ import {
   SessionState,
   StartRoundParams,
 } from './duck-hunt.types';
-import {
-  FLIGHT_DURATION_MS,
-  SHOW_AFTER_HIT_MS,
-  NEXT_ROUND_MIN_DELAY_MS,
-  NEXT_ROUND_MAX_DELAY_MS,
-} from './duck-hunt.const';
-import { random } from 'lodash';
-import { RoundEndPayload } from '../game/game.types';
-import {
-  DuckHuntPathDirection,
-  DuckHuntRound,
-  DuckHuntRoundEndReason,
-  DuckHuntRoundPath,
-} from '../../types';
 
 @Injectable()
 export class DuckHuntService {
@@ -143,7 +145,8 @@ export class DuckHuntService {
         clientId,
         reason: DuckHuntRoundEndReason.Timeout,
       });
-      this.scheduleNextRound({ clientId, onStarted });
+      this.scheduleNextRound({ clientId,
+onStarted });
     }, FLIGHT_DURATION_MS);
   }
 
@@ -179,7 +182,8 @@ export class DuckHuntService {
     const delay = random(NEXT_ROUND_MIN_DELAY_MS, NEXT_ROUND_MAX_DELAY_MS);
 
     session.nextRoundTimer = setTimeout(() => {
-      this.startRound({ clientId, onStarted });
+      this.startRound({ clientId,
+onStarted });
     }, delay);
   }
 }

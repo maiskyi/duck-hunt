@@ -12,8 +12,8 @@ export interface DuckPath {
 
 export interface RoundState {
   roundId: string;
-  startedAt: number;        // epoch ms
-  endsAt: number;           // epoch ms
+  startedAt: number; // epoch ms
+  endsAt: number; // epoch ms
   ended: boolean;
   endedReason?: RoundReason;
   duck: DuckPath;

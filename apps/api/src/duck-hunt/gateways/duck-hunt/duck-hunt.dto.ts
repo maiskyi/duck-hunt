@@ -1,10 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
+
+import { DuckHuntPathDirection } from '../../types';
+
 import type {
   DuckHuntPathCoordinates,
   DuckHuntRound,
   DuckHuntRoundPath,
 } from '../../types';
-import { DuckHuntPathDirection } from '../../types';
 
 export class RoundStartedMessagePathCoordinates implements DuckHuntPathCoordinates {
   @ApiProperty({
