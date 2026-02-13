@@ -11,6 +11,10 @@ export const Game = () => {
 
   const { emit } = useSocketEmit();
 
+  const handleOnDuckClick = useCallback(() => {
+    console.log("Duck clicked");
+  }, []);
+
   const handleOnRoundStarted: OnRoundStartedHandler = useCallback(
     ([{ roundId, path }]) => {
       console.log(roundId, path);
@@ -32,7 +36,7 @@ export const Game = () => {
 
   return (
     <Fragment>
-      <Duck ref={duck} />
+      <Duck ref={duck} onClick={handleOnDuckClick} />
     </Fragment>
   );
 };
