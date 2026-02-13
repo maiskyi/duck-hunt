@@ -4,5 +4,5 @@ export enum DuckHuntTopic {
   // HitRejected = 'duck-hunt/hit/rejected',
   GameStart = 'duck-hunt/game/start',
   // GameEnd = 'duck-hunt/game/end',
-  RoundStarted = 'duck-hunt/round/started',
+  RoundStart = 'duck-hunt/round/start',
 }
