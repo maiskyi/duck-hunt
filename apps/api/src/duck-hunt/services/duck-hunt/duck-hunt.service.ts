@@ -3,10 +3,8 @@ import { v4 as uuid } from 'uuid';
 import {
   ClearTimersParams,
   CreateSessionParams,
-  DuckPath,
   EndRoundParams,
   RemoveSessionParams,
-  RoundState,
   ScheduleNextRoundParams,
   SessionState,
   StartRoundParams,
@@ -19,7 +17,7 @@ import {
 } from './duck-hunt.const';
 import { random } from 'lodash';
 import { RoundEndPayload } from '../game/game.types';
-import { DuckHuntPathDirection, DuckHuntRoundEndReason } from '../../types';
+import { DuckHuntPathDirection, DuckHuntRound, DuckHuntRoundEndReason, DuckHuntRoundPath } from '../../types';
 
 @Injectable()
 export class DuckHuntService {
@@ -42,7 +40,7 @@ export class DuckHuntService {
     this.logger.log(`Timers cleared for ${clientId}`);
   }
 
-  private genDuckPath(): DuckPath {
+  private genRoundPath(): DuckHuntRoundPath {
     const direction = random(0, 1)
       ? DuckHuntPathDirection.Left2Right
       : DuckHuntPathDirection.Right2Left;
@@ -97,9 +95,9 @@ export class DuckHuntService {
     const startedAt = Date.now();
     const endsAt = startedAt + FLIGHT_DURATION_MS;
 
-    const path = this.genDuckPath();
+    const path = this.genRoundPath();
 
-    const round: RoundState = {
+    const round: DuckHuntRound = {
       roundId,
       startedAt,
       endsAt,

@@ -1,29 +1,8 @@
-import { DuckHuntPathDirection, DuckHuntRoundEndReason } from '../../types';
-
-export interface DuckPathCoordinates {
-  x: number;
-  y: number;
-}
-
-export interface DuckPath {
-  start: DuckPathCoordinates;
-  end: DuckPathCoordinates;
-  direction: DuckHuntPathDirection;
-  speed: number;
-}
-
-export interface RoundState {
-  roundId: string;
-  startedAt: number;
-  endsAt: number;
-  ended: boolean;
-  endedReason?: DuckHuntRoundEndReason;
-  path: DuckPath;
-}
+import { DuckHuntRoundEndReason, DuckHuntRound, DuckHuntRoundPath } from '../../types';
 
 export interface SessionState {
   clientId: string;
-  currentRound: RoundState | null;
+  currentRound: DuckHuntRound | null;
   nextRoundTimer: NodeJS.Timeout | null;
   endRoundTimer: NodeJS.Timeout | null;
   rounds: number;
@@ -40,7 +19,7 @@ export interface RemoveSessionParams {
 
 export interface StartRoundParams {
   clientId: string;
-  onStart?: (round: RoundState) => void;
+  onStart?: (round: DuckHuntRound) => void;
 }
 
 export interface ClearTimersParams {
