@@ -6,7 +6,6 @@ import {
   DuckPath,
   EndRoundParams,
   RemoveSessionParams,
-  RoundEndReason,
   RoundState,
   ScheduleNextRoundParams,
   SessionState,
@@ -20,7 +19,7 @@ import {
 } from './duck-hunt.const';
 import { random } from 'lodash';
 import { RoundEndPayload } from '../game/game.types';
-import { DuckHuntPathDirection } from '../../types';
+import { DuckHuntPathDirection, DuckHuntRoundEndReason } from '../../types';
 
 @Injectable()
 export class DuckHuntService {
@@ -132,7 +131,7 @@ export class DuckHuntService {
       if (session.currentRound.ended) return;
       this.endRound({
         clientId,
-        reason: RoundEndReason.Timeout,
+        reason: DuckHuntRoundEndReason.Timeout,
       });
       this.scheduleNextRound({ clientId });
     }, FLIGHT_DURATION_MS);

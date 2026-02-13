@@ -1,15 +1,4 @@
-import { DuckHuntPathDirection } from '../../types';
-
-export enum DuckPathDiagonal {
-  Straight = 'straight',
-  Up = 'up',
-  Down = 'down',
-}
-
-export enum RoundEndReason {
-  Hit = 'hit',
-  Timeout = 'timeout',
-}
+import { DuckHuntPathDirection, DuckHuntRoundEndReason } from '../../types';
 
 export interface DuckPathCoordinates {
   x: number;
@@ -28,7 +17,7 @@ export interface RoundState {
   startedAt: number;
   endsAt: number;
   ended: boolean;
-  endedReason?: RoundEndReason;
+  endedReason?: DuckHuntRoundEndReason;
   path: DuckPath;
 }
 
@@ -60,7 +49,7 @@ export interface ClearTimersParams {
 
 export interface EndRoundParams {
   clientId: string;
-  reason: RoundEndReason;
+  reason: DuckHuntRoundEndReason;
 }
 
 export interface ScheduleNextRoundParams {
