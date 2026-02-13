@@ -1,4 +1,5 @@
 import { Press_Start_2P } from "next/font/google";
+import { StoreProvider } from "@common/store";
 
 import "./global.scss";
 
@@ -20,8 +21,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={pressStart2P.className}>{children}</body>
-    </html>
+    <StoreProvider>
+      <html lang="en">
+        <body className={pressStart2P.className}>{children}</body>
+      </html>
+    </StoreProvider>
   );
 }
