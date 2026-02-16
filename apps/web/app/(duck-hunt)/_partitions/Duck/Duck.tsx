@@ -108,6 +108,10 @@ export const Duck = forwardRef<DuckInstance, DuckProps>(({ onClick }, ref) => {
   const end: DuckInstanceEndHandler = useCallback(({ roundId, path }) => {
     console.log("end", { path, roundId });
     if (stateRef.current?.status !== DuckInstanceStatus.Flying) return;
+    if (textureIntervalRef.current) {
+      clearInterval(textureIntervalRef.current);
+      textureIntervalRef.current = null;
+    }
     setState(() => null);
   }, []);
 

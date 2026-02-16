@@ -25,6 +25,7 @@ export const Game = () => {
   );
 
   const handleOnRoundEnded: OnRoundEndedHandler = useCallback(([{ roundId, path }]) => {
+    console.log("handleOnRoundEnded", { roundId, path });
     duck.current?.end({ roundId, path });
   }, []);
 

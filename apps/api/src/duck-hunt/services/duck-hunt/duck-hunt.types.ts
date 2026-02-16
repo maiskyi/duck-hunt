@@ -39,9 +39,11 @@ export interface ClearTimersParams {
 export interface EndRoundParams {
   clientId: string;
   reason: DuckHuntRoundEndReason;
+  onRoundEnd?: OnRoundStartedEndedCallback;
 }
 
 export interface ScheduleNextRoundParams {
   clientId: string;
   onRoundStart?: OnRoundStartedEndedCallback;
+  onRoundEnd?: OnRoundStartedEndedCallback;
 }

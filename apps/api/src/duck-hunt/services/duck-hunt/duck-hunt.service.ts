@@ -91,7 +91,7 @@ export class DuckHuntService {
     this.logger.log(`Session removed: ${clientId}`);
   }
 
-  public startRound({ clientId, onRoundStart }: StartRoundParams) {
+  public startRound({ clientId, onRoundStart, onRoundEnd }: StartRoundParams) {
     const session = this.sessions.get(clientId);
     if (!session) return;
 
@@ -115,14 +115,6 @@ export class DuckHuntService {
     session.currentRound = round;
     session.rounds += 1;
 
-    // const startPayload: RoundStartPayload = {
-    //   roundId,
-    //   startedAt,
-    //   flightDurationMs: FLIGHT_DURATION_MS,
-    //   showAfterHitMs: SHOW_AFTER_HIT_MS,
-    //   path,
-    // };
-
     this.logger.log(`Round started for ${clientId}: ${roundId}`);
 
     onRoundStart?.({
@@ -132,10 +124,6 @@ export class DuckHuntService {
       hits: session.hits,
     });
 
-    // this.emitToClient?.(socketId, 'round:start', startPayload);
-    // this.emitToClient?.(socketId, 'stats', { rounds: s.rounds, hits: s.hits });
-
-    // End on timeout
     session.endRoundTimer = setTimeout(() => {
       const session = this.sessions.get(clientId);
       if (!session?.currentRound) return;
@@ -144,15 +132,17 @@ export class DuckHuntService {
       this.endRound({
         clientId,
         reason: DuckHuntRoundEndReason.Timeout,
+        onRoundEnd,
       });
       this.scheduleNextRound({
         clientId,
         onRoundStart,
+        onRoundEnd,
       });
     }, FLIGHT_DURATION_MS);
   }
 
-  private endRound({ clientId, reason }: EndRoundParams) {
+  private endRound({ clientId, reason, onRoundEnd }: EndRoundParams) {
     const session = this.sessions.get(clientId);
     if (!session?.currentRound) return;
 
@@ -167,24 +157,26 @@ export class DuckHuntService {
       session.endRoundTimer = null;
     }
 
-    // const endPayload: RoundEndPayload = { roundId: round.roundId, reason };
+    onRoundEnd?.({
+      clientId,
+      round,
+      rounds: session.rounds,
+      hits: session.hits,
+    });
 
     this.logger.log(
       `Round ended for ${clientId}: ${round.roundId} (${reason})`,
     );
-
-    // this.emitToClient?.(socketId, 'round:end', endPayload);
-    // this.emitToClient?.(socketId, 'stats', { rounds: s.rounds, hits: s.hits });
   }
 
-  private scheduleNextRound({ clientId, onRoundStart }: ScheduleNextRoundParams) {
+  private scheduleNextRound({ clientId, onRoundStart, onRoundEnd }: ScheduleNextRoundParams) {
     const session = this.sessions.get(clientId);
     if (!session) return;
 
     const delay = random(NEXT_ROUND_MIN_DELAY_MS, NEXT_ROUND_MAX_DELAY_MS);
 
     session.nextRoundTimer = setTimeout(() => {
-      this.startRound({ clientId, onRoundStart });
+      this.startRound({ clientId, onRoundStart, onRoundEnd });
     }, delay);
   }
 }
