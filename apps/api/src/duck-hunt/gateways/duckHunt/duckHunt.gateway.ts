@@ -11,7 +11,7 @@ import { Server, Socket } from 'socket.io';
 import { Logger } from '@nestjs/common';
 import { AsyncApiPub, AsyncApiSub } from 'nestjs-asyncapi';
 
-import { DuckHuntTopic } from '../../types';
+import { DuckHuntRoundEndReason, DuckHuntTopic } from '../../types';
 import { GameStartPayload } from '../../dto';
 import { DuckHuntGameService } from '../../services/duckHuntGame';
 
@@ -134,10 +134,46 @@ export class DuckHuntInitGateway
       roundId,
       clientId,
     });
-    this.game.hit({
+    const result = this.game.hit({
       clientId,
       roundId,
+      onRoundStart: ({ round, clientId, rounds, hits }) => {
+        this.roundStart({
+          round,
+          clientId,
+        });
+        this.gameStats({
+          clientId,
+          rounds,
+          hits,
+        });
+      },
+      onRoundEnd: ({ round, clientId, rounds, hits }) => {
+        this.roundEnd({
+          round,
+          clientId,
+        });
+        this.gameStats({
+          clientId,
+          rounds,
+          hits,
+        });
+      },
     });
+    if (result.reason === DuckHuntRoundEndReason.Hit) {
+      this.hitConfirmed({
+        clientId,
+        roundId,
+        reason: result.reason,
+      });
+    } else {
+      this.hitRejected({
+        clientId,
+        roundId,
+        reason: result.reason,
+      });
+    }
+    console.log('result', result);
   }
 
   @AsyncApiSub({

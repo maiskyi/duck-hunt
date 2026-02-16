@@ -59,4 +59,6 @@ export interface StartGameParams {
 export interface HitParams {
   clientId: string;
   roundId: string;
+  onRoundStart?: OnRoundStartedEndedCallback;
+  onRoundEnd?: OnRoundStartedEndedCallback;
 }

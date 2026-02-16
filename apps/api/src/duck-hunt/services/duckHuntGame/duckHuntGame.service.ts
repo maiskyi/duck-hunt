@@ -200,7 +200,7 @@ export class DuckHuntGameService {
     this.logger.log(`Session removed: ${clientId}`);
   }
 
-  public hit({ clientId, roundId }: HitParams) {
+  public hit({ clientId, roundId, onRoundStart, onRoundEnd }: HitParams) {
     const session = this.sessions.get(clientId);
     const now = Date.now();
 
@@ -233,14 +233,28 @@ export class DuckHuntGameService {
     }
 
     session.hits += 1;
+
     this.endRound({
       clientId,
       reason: DuckHuntRoundEndReason.Hit,
     });
 
+    onRoundEnd?.({
+      clientId,
+      round,
+      rounds: session.rounds,
+      hits: session.hits,
+    });
+
+    this.scheduleNextRound({
+      clientId,
+      onRoundStart,
+      onRoundEnd,
+    });
+
     return {
       roundId,
-      hitAt: now,
+      reason: DuckHuntRoundEndReason.Hit,
       hits: session.hits,
     };
   }

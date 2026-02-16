@@ -5,3 +5,5 @@ export type OnRoundStartedHandler = EventHandler<"duck-hunt/round/start">;
 export type OnRoundEndedHandler = EventHandler<"duck-hunt/round/end">;
 
 export type OnGameStatsHandler = EventHandler<"duck-hunt/game/stats">;
+
+export type OnHitConfirmedHandler = EventHandler<"duck-hunt/hit/confirmed">;

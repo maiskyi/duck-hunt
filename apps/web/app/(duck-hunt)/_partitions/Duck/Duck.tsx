@@ -17,17 +17,17 @@ import { Sounds } from "../../_services/sounds";
 import {
   DuckInstance,
   DuckInstanceEndHandler,
-  DuckInstanceFlyHandler,
   DuckInstanceMoveHandler,
   DuckInstanceStartHandler,
   DuckInstanceStatus,
   DuckInstanceTexture,
+  DuckOnClickHandler,
   DuckState,
 } from "./Duck.types";
 import { DUCK_TEXTURE_FRAMES } from "./Duck.const";
 
 interface DuckProps {
-  onClick: () => void;
+  onClick: DuckOnClickHandler;
 }
 
 export const DuckForwardRefExoticComponent = forwardRef<
@@ -41,14 +41,6 @@ export const DuckForwardRefExoticComponent = forwardRef<
   const textureIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   stateRef.current = state;
-
-  const fly: DuckInstanceFlyHandler = useCallback(
-    ({ path, roundId }) => {
-      if (state?.status !== DuckInstanceStatus.Flying) return;
-      console.log({ path, roundId });
-    },
-    [state?.status],
-  );
 
   const move: DuckInstanceMoveHandler = useCallback(
     ({
@@ -146,11 +138,10 @@ export const DuckForwardRefExoticComponent = forwardRef<
     setTimeout(() => {
       setState(() => null);
     }, 3000);
-    onClick();
+    onClick({ roundId: stateRef.current?.roundId });
   }, [onClick]);
 
   useImperativeHandle(ref, () => ({
-    fly,
     start,
     end,
   }));

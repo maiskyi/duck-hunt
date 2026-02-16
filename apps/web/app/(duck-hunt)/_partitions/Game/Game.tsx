@@ -6,11 +6,12 @@ import { Fragment, memo, useCallback, useRef } from "react";
 import { useDispatch } from "react-redux";
 
 import { setStats } from "../../_slice";
-import { Duck, DuckInstance } from "../Duck";
+import { Duck, DuckInstance, DuckOnClickHandler } from "../Duck";
 import { Banner, BannerInstance, BannerVariant } from "../Banner";
 
 import {
   OnGameStatsHandler,
+  OnHitConfirmedHandler,
   OnRoundEndedHandler,
   OnRoundStartedHandler,
 } from "./Game.types";
@@ -22,13 +23,16 @@ export const Game = memo(function Game() {
 
   const { emit } = useSocketEmit();
 
-  const handleOnDuckClick = useCallback(() => {
-    banner.current?.show({
-      variant: BannerVariant.Warning,
-      message: "Duck clicked",
-      duration: 3000,
-    });
-  }, []);
+  const handleOnDuckClick: DuckOnClickHandler = useCallback(
+    ({ roundId }) => {
+      emit("duck-hunt/duck/hit", [
+        {
+          roundId,
+        },
+      ]);
+    },
+    [emit],
+  );
 
   const handleOnRoundStarted: OnRoundStartedHandler = useCallback(
     ([{ roundId, path }]) => {
@@ -46,11 +50,18 @@ export const Game = memo(function Game() {
 
   const handleOnGameStats: OnGameStatsHandler = useCallback(
     ([{ rounds, hits }]) => {
-      console.log("handleOnGameStats", { rounds, hits });
       dispatch(setStats({ rounds, hits }));
     },
     [dispatch],
   );
+
+  const handleOnHitConfirmed: OnHitConfirmedHandler = useCallback(() => {
+    banner.current?.show({
+      variant: BannerVariant.Warning,
+      message: "💥 HIT!",
+      duration: 3000,
+    });
+  }, []);
 
   useSocketEvent("duck-hunt/round/start", {
     handler: handleOnRoundStarted,
@@ -62,6 +73,10 @@ export const Game = memo(function Game() {
 
   useSocketEvent("duck-hunt/game/stats", {
     handler: handleOnGameStats,
+  });
+
+  useSocketEvent("duck-hunt/hit/confirmed", {
+    handler: handleOnHitConfirmed,
   });
 
   useMount(() => {

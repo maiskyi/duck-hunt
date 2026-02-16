@@ -11,11 +11,6 @@ export enum DuckInstanceStatus {
   Hit = "hit",
 }
 
-export interface DuckInstanceFlyHandlerParams {
-  roundId: string;
-  path: Models.RoundMessagePath;
-}
-
 export interface DuckInstanceStartHandlerParams {
   roundId: string;
   path: Models.RoundMessagePath;
@@ -25,10 +20,6 @@ export interface DuckInstanceEndHandlerParams {
   roundId: string;
   path: Models.RoundMessagePath;
 }
-
-export type DuckInstanceFlyHandler = (
-  params: DuckInstanceFlyHandlerParams,
-) => void;
 
 export type DuckInstanceStartHandler = (
   params: DuckInstanceStartHandlerParams,
@@ -48,7 +39,6 @@ export interface DuckInstanceMoveHandlerParams {
 }
 
 export interface DuckInstance {
-  fly: DuckInstanceFlyHandler;
   start: DuckInstanceStartHandler;
   end: DuckInstanceEndHandler;
 }
@@ -61,3 +51,11 @@ export interface DuckState {
   status: DuckInstanceStatus;
   direction: Models.RoundMessagePathDirection;
 }
+
+export interface DuckOnClickHandlerParams {
+  roundId: string;
+}
+
+export type DuckOnClickHandler = (
+  params: DuckOnClickHandlerParams,
+) => void;
