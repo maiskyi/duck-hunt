@@ -113,6 +113,25 @@
   pointer-events: none;
 }
 
+.duck {
+  position: absolute;
+  z-index: 300;
+  filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.5));
+  cursor: none;
+  transform: scaleX(1);
+
+  &.hit {
+    cursor: default;
+    transition: none;
+    animation: duckFall 1.5s ease-in forwards;
+    filter: drop-shadow(0 0 8px rgba(255,100,0,0.9));
+  }
+
+  &.left {
+    transform: scaleX(-1);
+  }
+}
+
 @keyframes blink {
   0%,
   100% {

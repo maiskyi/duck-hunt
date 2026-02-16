@@ -91,7 +91,7 @@ export class DuckHuntService {
     this.logger.log(`Session removed: ${clientId}`);
   }
 
-  public startRound({ clientId, onStarted }: StartRoundParams) {
+  public startRound({ clientId, onRoundStart }: StartRoundParams) {
     const session = this.sessions.get(clientId);
     if (!session) return;
 
@@ -125,7 +125,7 @@ export class DuckHuntService {
 
     this.logger.log(`Round started for ${clientId}: ${roundId}`);
 
-    onStarted?.({
+    onRoundStart?.({
       clientId,
       round,
       rounds: session.rounds,
@@ -145,8 +145,10 @@ export class DuckHuntService {
         clientId,
         reason: DuckHuntRoundEndReason.Timeout,
       });
-      this.scheduleNextRound({ clientId,
-onStarted });
+      this.scheduleNextRound({
+        clientId,
+        onRoundStart,
+      });
     }, FLIGHT_DURATION_MS);
   }
 
@@ -175,15 +177,14 @@ onStarted });
     // this.emitToClient?.(socketId, 'stats', { rounds: s.rounds, hits: s.hits });
   }
 
-  private scheduleNextRound({ clientId, onStarted }: ScheduleNextRoundParams) {
+  private scheduleNextRound({ clientId, onRoundStart }: ScheduleNextRoundParams) {
     const session = this.sessions.get(clientId);
     if (!session) return;
 
     const delay = random(NEXT_ROUND_MIN_DELAY_MS, NEXT_ROUND_MAX_DELAY_MS);
 
     session.nextRoundTimer = setTimeout(() => {
-      this.startRound({ clientId,
-onStarted });
+      this.startRound({ clientId, onRoundStart });
     }, delay);
   }
 }

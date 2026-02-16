@@ -20,6 +20,8 @@
   },
   "dependencies": {
     "@the-codegen-project/cli": "^0.64.1",
+    "@types/lodash": "^4.17.23",
+    "lodash": "^4.17.23",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "use-socket-io-react": "^0.2.1"

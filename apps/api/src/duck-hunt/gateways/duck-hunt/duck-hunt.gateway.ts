@@ -15,9 +15,9 @@ import { DuckHuntTopic } from '../../types';
 import { GameStartPayload } from '../../dto';
 import { DuckHuntService } from '../../services/duck-hunt';
 
-import { RoundStartedMessage } from './duck-hunt.dto';
+import { RoundStartedEndedMessage } from './duck-hunt.dto';
 
-import type { GameStatsParams, RoundStartParams } from './duck-hunt.types';
+import type { GameStatsParams,  RoundStartEndParams } from './duck-hunt.types';
 
 @WebSocketGateway({
   namespace: '/duck-hunt',
@@ -54,9 +54,17 @@ export class DuckHuntGateway
     });
     this.game.startRound({
       clientId,
-      onStarted: ({ round, clientId }) => {
-        this.roundStart({ round,
-clientId });
+      onRoundStart: ({ round, clientId }) => {
+        this.roundStart({
+          round,
+          clientId,
+        });
+      },
+      onRoundEnd: ({ round, clientId }) => {
+        this.roundEnd({
+          round,
+          clientId,
+        });
       },
     });
     return { ok: true };
@@ -65,22 +73,32 @@ clientId });
   @AsyncApiSub({
     channel: DuckHuntTopic.RoundStart,
     message: {
-      payload: RoundStartedMessage,
+      payload: RoundStartedEndedMessage,
     },
   })
-  private roundStart({ round, clientId }: RoundStartParams) {
+  private roundStart({ round, clientId }: RoundStartEndParams) {
     this.server.to(clientId).emit(DuckHuntTopic.RoundStart, round);
   }
 
   @AsyncApiSub({
-    channel: DuckHuntTopic.GameStats,
+    channel: DuckHuntTopic.RoundEnd,
     message: {
-      payload: RoundStartedMessage,
+      payload: RoundStartedEndedMessage,
     },
   })
-  private gameStats({ clientId, ...stats }: GameStatsParams) {
-    this.server.to(clientId).emit(DuckHuntTopic.GameStats, stats);
+  private roundEnd({ round, clientId }: RoundStartEndParams) {
+    this.server.to(clientId).emit(DuckHuntTopic.RoundEnd, round);
   }
+
+  // @AsyncApiSub({
+  //   channel: DuckHuntTopic.GameStats,
+  //   message: {
+  //     payload: RoundStartedMessage,
+  //   },
+  // })
+  // private gameStats({ clientId, ...stats }: GameStatsParams) {
+  //   this.server.to(clientId).emit(DuckHuntTopic.GameStats, stats);
+  // }
 
   public handleConnection({ id: clientId }: Socket) {
     this.logger.log(`Client connected: ${clientId}`);

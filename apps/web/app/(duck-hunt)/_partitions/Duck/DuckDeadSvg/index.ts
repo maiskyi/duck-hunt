@@ -1,0 +1,1 @@
+export { DuckDeadSvg } from "./DuckDeadSvg";

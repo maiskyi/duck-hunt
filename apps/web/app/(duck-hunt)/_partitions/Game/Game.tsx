@@ -6,7 +6,7 @@ import { Fragment, useCallback, useRef } from "react";
 
 import { Duck, DuckInstance } from "../Duck";
 
-import { OnRoundStartedHandler } from "./Game.types";
+import { OnRoundEndedHandler, OnRoundStartedHandler } from "./Game.types";
 
 export const Game = () => {
   const duck = useRef<DuckInstance>(null);
@@ -19,13 +19,21 @@ export const Game = () => {
 
   const handleOnRoundStarted: OnRoundStartedHandler = useCallback(
     ([{ roundId, path }]) => {
-      console.log(roundId, path);
+      duck.current?.start({ roundId, path });
     },
     [],
   );
 
+  const handleOnRoundEnded: OnRoundEndedHandler = useCallback(([{ roundId, path }]) => {
+    duck.current?.end({ roundId, path });
+  }, []);
+
   useSocketEvent("duck-hunt/round/start", {
     handler: handleOnRoundStarted,
+  });
+
+  useSocketEvent("duck-hunt/round/end", {
+    handler: handleOnRoundEnded,
   });
 
   useMount(() => {

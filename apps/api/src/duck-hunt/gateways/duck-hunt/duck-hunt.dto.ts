@@ -8,7 +8,7 @@ import type {
   DuckHuntRoundPath,
 } from '../../types';
 
-export class RoundStartedMessagePathCoordinates implements DuckHuntPathCoordinates {
+export class RoundMessagePathCoordinates implements DuckHuntPathCoordinates {
   @ApiProperty({
     type: Number,
   })
@@ -20,14 +20,14 @@ export class RoundStartedMessagePathCoordinates implements DuckHuntPathCoordinat
   public readonly y: number;
 }
 
-export class RoundStartedMessagePath implements DuckHuntRoundPath {
+export class RoundMessagePath implements DuckHuntRoundPath {
   @ApiProperty({
-    type: RoundStartedMessagePathCoordinates,
+    type: RoundMessagePathCoordinates,
   })
   public readonly start: DuckHuntPathCoordinates;
 
   @ApiProperty({
-    type: RoundStartedMessagePathCoordinates,
+    type: RoundMessagePathCoordinates,
   })
   public readonly end: DuckHuntPathCoordinates;
 
@@ -43,7 +43,7 @@ export class RoundStartedMessagePath implements DuckHuntRoundPath {
   public readonly speed: number;
 }
 
-export class RoundStartedMessage implements DuckHuntRound {
+export class RoundStartedEndedMessage implements DuckHuntRound {
   @ApiProperty({
     type: String,
   })
@@ -65,7 +65,7 @@ export class RoundStartedMessage implements DuckHuntRound {
   public readonly ended: boolean;
 
   @ApiProperty({
-    type: RoundStartedMessagePath,
+    type: RoundMessagePath,
   })
   public readonly path: DuckHuntRoundPath;
 }

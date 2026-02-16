@@ -1,8 +1,4 @@
-import {
-  DuckHuntRoundEndReason,
-  DuckHuntRound,
-  DuckHuntRoundPath,
-} from '../../types';
+import { DuckHuntRoundEndReason, DuckHuntRound } from '../../types';
 
 export interface SessionState {
   clientId: string;
@@ -21,18 +17,19 @@ export interface RemoveSessionParams {
   clientId: string;
 }
 
-interface OnRoundStartedCallbackParams {
+interface OnRoundStartedEndedCallbackParams {
   clientId: string;
   round: DuckHuntRound;
   rounds: number;
   hits: number;
 }
 
-type OnRoundStartedCallback = (params: OnRoundStartedCallbackParams) => void;
+type OnRoundStartedEndedCallback = (params: OnRoundStartedEndedCallbackParams) => void;
 
 export interface StartRoundParams {
   clientId: string;
-  onStarted?: OnRoundStartedCallback;
+  onRoundStart?: OnRoundStartedEndedCallback;
+  onRoundEnd?: OnRoundStartedEndedCallback;
 }
 
 export interface ClearTimersParams {
@@ -46,5 +43,5 @@ export interface EndRoundParams {
 
 export interface ScheduleNextRoundParams {
   clientId: string;
-  onStarted?: OnRoundStartedCallback;
+  onRoundStart?: OnRoundStartedEndedCallback;
 }
