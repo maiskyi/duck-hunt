@@ -8,7 +8,7 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@common/*": ["./app/_common/*"]
+      "@common/*": ["./app/_common/*"],
     }
   },
   "include": [

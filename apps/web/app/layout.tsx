@@ -1,8 +1,8 @@
 import { Press_Start_2P } from "next/font/google";
 import { StoreProvider } from "@common/components";
+import { store } from "@common/store";
 
 import "./global.scss";
-import { store } from "./store";
 
 import type { Metadata } from "next";
 

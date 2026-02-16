@@ -1,1 +1,1 @@
-export { reducer } from "./duckHunt.slice";
+export { reducer, setStats } from "./duckHunt.slice";

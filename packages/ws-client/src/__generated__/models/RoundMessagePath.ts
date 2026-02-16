@@ -1,5 +1,5 @@
-import {RoundMessagePathCoordinates} from './RoundMessagePathCoordinates';
-import {RoundMessagePathDirection} from './RoundMessagePathDirection';
+import { RoundMessagePathCoordinates } from "./RoundMessagePathCoordinates";
+import { RoundMessagePathDirection } from "./RoundMessagePathDirection";
 interface RoundMessagePath {
   start: RoundMessagePathCoordinates;
   end: RoundMessagePathCoordinates;

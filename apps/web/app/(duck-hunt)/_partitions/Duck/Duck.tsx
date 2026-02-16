@@ -112,6 +112,10 @@ export const Duck = forwardRef<DuckInstance, DuckProps>(({ onClick }, ref) => {
       clearInterval(textureIntervalRef.current);
       textureIntervalRef.current = null;
     }
+    if (moveRafRef.current) {
+      cancelAnimationFrame(moveRafRef.current);
+      moveRafRef.current = null;
+    }
     setState(() => null);
   }, []);
 

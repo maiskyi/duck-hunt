@@ -3,3 +3,4 @@ export type { RoundStartedEndedMessage } from "./__generated__/models/RoundStart
 export type { RoundMessagePath } from "./__generated__/models/RoundMessagePath";
 export type { RoundMessagePathCoordinates } from "./__generated__/models/RoundMessagePathCoordinates";
 export { RoundMessagePathDirection } from "./__generated__/models/RoundMessagePathDirection";
+export type { GameStatsMessage } from "./__generated__/models/GameStatsMessage";

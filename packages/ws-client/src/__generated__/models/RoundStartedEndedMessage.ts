@@ -1,4 +1,4 @@
-import {RoundMessagePath} from './RoundMessagePath';
+import { RoundMessagePath } from "./RoundMessagePath";
 interface RoundStartedEndedMessage {
   roundId: string;
   startedAt: number;

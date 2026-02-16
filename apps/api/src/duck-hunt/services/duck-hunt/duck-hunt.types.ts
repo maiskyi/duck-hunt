@@ -47,3 +47,9 @@ export interface ScheduleNextRoundParams {
   onRoundStart?: OnRoundStartedEndedCallback;
   onRoundEnd?: OnRoundStartedEndedCallback;
 }
+
+export interface StartGameParams {
+  clientId: string;
+  onRoundStart?: OnRoundStartedEndedCallback;
+  onRoundEnd?: OnRoundStartedEndedCallback;
+}

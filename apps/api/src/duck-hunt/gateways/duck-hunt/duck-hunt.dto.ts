@@ -69,3 +69,16 @@ export class RoundStartedEndedMessage implements DuckHuntRound {
   })
   public readonly path: DuckHuntRoundPath;
 }
+
+
+export class GameStatsMessage {
+  @ApiProperty({
+    type: Number,
+  })
+  public readonly rounds: number;
+
+  @ApiProperty({
+    type: Number,
+  })
+  public readonly hits: number;
+}

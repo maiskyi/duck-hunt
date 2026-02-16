@@ -15,7 +15,7 @@ import { DuckHuntTopic } from '../../types';
 import { GameStartPayload } from '../../dto';
 import { DuckHuntService } from '../../services/duck-hunt';
 
-import { RoundStartedEndedMessage } from './duck-hunt.dto';
+import { GameStatsMessage, RoundStartedEndedMessage } from './duck-hunt.dto';
 
 import type { GameStatsParams,  RoundStartEndParams } from './duck-hunt.types';
 
@@ -52,18 +52,28 @@ export class DuckHuntGateway
       timestamp,
       clientId,
     });
-    this.game.startRound({
+    this.game.start({
       clientId,
-      onRoundStart: ({ round, clientId }) => {
+      onRoundStart: ({ round, clientId, rounds, hits }) => {
         this.roundStart({
           round,
           clientId,
         });
+        this.gameStats({
+          clientId,
+          rounds,
+          hits,
+        });
       },
-      onRoundEnd: ({ round, clientId }) => {
+      onRoundEnd: ({ round, clientId, rounds, hits }) => {
         this.roundEnd({
           round,
           clientId,
+        });
+        this.gameStats({
+          clientId,
+          rounds,
+          hits,
         });
       },
     });
@@ -90,15 +100,15 @@ export class DuckHuntGateway
     this.server.to(clientId).emit(DuckHuntTopic.RoundEnd, round);
   }
 
-  // @AsyncApiSub({
-  //   channel: DuckHuntTopic.GameStats,
-  //   message: {
-  //     payload: RoundStartedMessage,
-  //   },
-  // })
-  // private gameStats({ clientId, ...stats }: GameStatsParams) {
-  //   this.server.to(clientId).emit(DuckHuntTopic.GameStats, stats);
-  // }
+  @AsyncApiSub({
+    channel: DuckHuntTopic.GameStats,
+    message: {
+      payload: GameStatsMessage,
+    },
+  })
+  private gameStats({ clientId, ...stats }: GameStatsParams) {
+    this.server.to(clientId).emit(DuckHuntTopic.GameStats, stats);
+  }
 
   public handleConnection({ id: clientId }: Socket) {
     this.logger.log(`Client connected: ${clientId}`);

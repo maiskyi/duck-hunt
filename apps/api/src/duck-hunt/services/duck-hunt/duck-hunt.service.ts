@@ -23,6 +23,7 @@ import {
   RemoveSessionParams,
   ScheduleNextRoundParams,
   SessionState,
+  StartGameParams,
   StartRoundParams,
 } from './duck-hunt.types';
 
@@ -91,7 +92,14 @@ export class DuckHuntService {
     this.logger.log(`Session removed: ${clientId}`);
   }
 
-  public startRound({ clientId, onRoundStart, onRoundEnd }: StartRoundParams) {
+  public start({ clientId, onRoundStart, onRoundEnd }: StartGameParams) {
+    const session = this.sessions.get(clientId);
+    if (!session) return;
+
+    this.startRound({ clientId, onRoundStart, onRoundEnd });
+  }
+
+  private startRound({ clientId, onRoundStart, onRoundEnd }: StartRoundParams) {
     const session = this.sessions.get(clientId);
     if (!session) return;
 
