@@ -41,22 +41,19 @@ export const Duck = forwardRef<DuckInstance, DuckProps>(({ onClick }, ref) => {
     [state?.status],
   );
 
-  const start: DuckInstanceStartHandler = useCallback(
-    ({ path, roundId }) => {
-      console.log("start", { path, roundId });
-      if (stateRef.current?.status === DuckInstanceStatus.Flying) return;
-      setState(() => ({
-        roundId,
-        texture: DuckInstanceTexture.A,
-        status: DuckInstanceStatus.Flying,
-        direction: path.direction,
-      }));
-    },
-    [],
-  );
+  const start: DuckInstanceStartHandler = useCallback(({ path, roundId }) => {
+    console.log("start", { path, roundId });
+    if (stateRef.current?.status === DuckInstanceStatus.Flying) return;
+    setState(() => ({
+      roundId,
+      texture: DuckInstanceTexture.A,
+      status: DuckInstanceStatus.Flying,
+      direction: path.direction,
+    }));
+  }, []);
 
   const end: DuckInstanceEndHandler = useCallback(({ roundId, path }) => {
-    console.log("end", { roundId, path });
+    console.log("end", { path, roundId });
     if (stateRef.current?.status !== DuckInstanceStatus.Flying) return;
     setState(() => null);
   }, []);
@@ -76,8 +73,7 @@ export const Duck = forwardRef<DuckInstance, DuckProps>(({ onClick }, ref) => {
       className={classNames(styles.duck, {
         [`${styles.hit}`]: state.status === DuckInstanceStatus.Hit,
         [`${styles.left}`]:
-          state.direction ===
-          Models.RoundMessagePathDirection.LEFT2_RIGHT,
+          state.direction === Models.RoundMessagePathDirection.LEFT2_RIGHT,
       })}
       onClick={state.status === DuckInstanceStatus.Flying ? onClick : undefined}
       style={
