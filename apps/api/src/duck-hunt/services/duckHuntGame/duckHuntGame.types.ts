@@ -24,7 +24,9 @@ interface OnRoundStartedEndedCallbackParams {
   hits: number;
 }
 
-type OnRoundStartedEndedCallback = (params: OnRoundStartedEndedCallbackParams) => void;
+type OnRoundStartedEndedCallback = (
+  params: OnRoundStartedEndedCallbackParams,
+) => void;
 
 export interface StartRoundParams {
   clientId: string;
@@ -52,4 +54,9 @@ export interface StartGameParams {
   clientId: string;
   onRoundStart?: OnRoundStartedEndedCallback;
   onRoundEnd?: OnRoundStartedEndedCallback;
+}
+
+export interface HitParams {
+  clientId: string;
+  roundId: string;
 }

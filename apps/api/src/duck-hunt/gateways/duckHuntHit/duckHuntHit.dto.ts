@@ -9,20 +9,4 @@ export class DuckHitPayload {
   @IsString()
   @IsNotEmpty()
   public readonly roundId: string;
-
-  @ApiProperty({
-    description: 'The client ID',
-    example: '123',
-  })
-  @IsString()
-  @IsNotEmpty()
-  public readonly by: string;
-
-  @ApiProperty({
-    description: 'The timestamp',
-    example: 123,
-  })
-  @IsNumber()
-  @IsNotEmpty()
-  public readonly at: number;
 }

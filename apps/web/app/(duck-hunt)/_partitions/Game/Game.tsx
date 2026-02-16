@@ -2,16 +2,20 @@
 
 import { useMount } from "react-use";
 import { useSocketEmit, useSocketEvent } from "@repo/ws-client";
-import { Fragment, useCallback, useRef } from "react";
+import { Fragment, memo, useCallback, useRef } from "react";
 import { useDispatch } from "react-redux";
 
 import { setStats } from "../../_slice";
 import { Duck, DuckInstance } from "../Duck";
 import { Banner, BannerInstance, BannerVariant } from "../Banner";
 
-import { OnGameStatsHandler, OnRoundEndedHandler, OnRoundStartedHandler } from "./Game.types";
+import {
+  OnGameStatsHandler,
+  OnRoundEndedHandler,
+  OnRoundStartedHandler,
+} from "./Game.types";
 
-export const Game = () => {
+export const Game = memo(function Game() {
   const dispatch = useDispatch();
   const duck = useRef<DuckInstance>(null);
   const banner = useRef<BannerInstance>(null);
@@ -33,13 +37,20 @@ export const Game = () => {
     [],
   );
 
-  const handleOnRoundEnded: OnRoundEndedHandler = useCallback(([{ roundId, path }]) => {
-    duck.current?.end({ roundId, path });
-  }, []);
+  const handleOnRoundEnded: OnRoundEndedHandler = useCallback(
+    ([{ roundId, path }]) => {
+      duck.current?.end({ roundId, path });
+    },
+    [],
+  );
 
-  const handleOnGameStats: OnGameStatsHandler = useCallback(([{ rounds, hits }]) => {
-    dispatch(setStats({ rounds, hits }));
-  }, [dispatch]);
+  const handleOnGameStats: OnGameStatsHandler = useCallback(
+    ([{ rounds, hits }]) => {
+      console.log("handleOnGameStats", { rounds, hits });
+      dispatch(setStats({ rounds, hits }));
+    },
+    [dispatch],
+  );
 
   useSocketEvent("duck-hunt/round/start", {
     handler: handleOnRoundStarted,
@@ -67,4 +78,4 @@ export const Game = () => {
       <Duck ref={duck} onClick={handleOnDuckClick} />
     </Fragment>
   );
-};
+});

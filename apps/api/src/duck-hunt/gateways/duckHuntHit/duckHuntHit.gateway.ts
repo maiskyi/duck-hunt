@@ -13,9 +13,10 @@ import { DuckHuntTopic } from '../../types';
 import {
   DuckHitPayload,
   HitConfirmedMessage,
-  HitRejectedMessage,
 } from '../../dto';
 import { Logger } from '@nestjs/common';
+import { DuckHuntGameService } from 'src/duck-hunt/services/duckHuntGame';
+import type { HitConfirmedParams } from './duckHuntHit.types';
 
 @WebSocketGateway({
   namespace: '/duck-hunt',
@@ -31,6 +32,8 @@ export class DuckHuntHitGateway {
     timestamp: true,
   });
 
+  public constructor(private game: DuckHuntGameService) {}
+
   @SubscribeMessage(DuckHuntTopic.DuckHit)
   @AsyncApiPub({
     channel: DuckHuntTopic.DuckHit,
@@ -39,12 +42,30 @@ export class DuckHuntHitGateway {
     },
   })
   public onHit(
-    @MessageBody() body: DuckHitPayload,
-    @ConnectedSocket() client: Socket,
+    @MessageBody() { roundId }: DuckHitPayload,
+    @ConnectedSocket() { id: clientId }: Socket,
   ) {
     this.logger.log(DuckHuntTopic.DuckHit, {
-      body,
-      client,
+      roundId,
+      clientId,
+    });
+    this.game.hit({
+      clientId,
+      roundId,
+    });
+  }
+
+  @AsyncApiSub({
+    channel: DuckHuntTopic.HitConfirmed,
+    message: {
+      payload: HitConfirmedMessage,
+    },
+  })
+  private hitConfirmed({ clientId }: HitConfirmedParams) {
+    this.server.to(clientId).emit(DuckHuntTopic.HitConfirmed, {
+      // roundId: body.roundId,
+      // by: client.id,
+      // at: Date.now(),
     });
   }
   // public onShoot(
@@ -66,19 +87,7 @@ export class DuckHuntHitGateway {
   //     at: Date.now(),
   //   });
   // }
-  // @AsyncApiSub({
-  //   channel: DuckHuntTopic.HitConfirmed,
-  //   message: {
-  //     payload: HitConfirmedMessage,
-  //   },
-  // })
-  // private onHitConfirmed(body: DuckHitPayload, client: Socket) {
-  //   this.server.emit(DuckHuntTopic.DuckHit, {
-  //     roundId: body.roundId,
-  //     by: client.id,
-  //     at: Date.now(),
-  //   });
-  // }
+  
   // @AsyncApiSub({
   //   channel: DuckHuntTopic.HitRejected,
   //   message: {

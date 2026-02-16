@@ -18,6 +18,7 @@ import {
   ClearTimersParams,
   CreateSessionParams,
   EndRoundParams,
+  HitParams,
   RemoveSessionParams,
   ScheduleNextRoundParams,
   SessionState,
@@ -63,38 +64,6 @@ export class DuckHuntGameService {
       },
       speed: FLIGHT_DURATION_MS,
     };
-  }
-
-  public createSession({ clientId }: CreateSessionParams) {
-    const existing = this.sessions.get(clientId);
-    if (existing) return;
-
-    this.sessions.set(clientId, {
-      clientId,
-      currentRound: null,
-      nextRoundTimer: null,
-      endRoundTimer: null,
-      rounds: 0,
-      hits: 0,
-    });
-
-    this.logger.log(`Session created: ${clientId}`);
-  }
-
-  public removeSession({ clientId }: RemoveSessionParams) {
-    const session = this.sessions.get(clientId);
-    if (!session) return;
-
-    this.clearTimers({ clientId });
-    this.sessions.delete(clientId);
-    this.logger.log(`Session removed: ${clientId}`);
-  }
-
-  public start({ clientId, onRoundStart, onRoundEnd }: StartGameParams) {
-    const session = this.sessions.get(clientId);
-    if (!session) return;
-
-    this.startRound({ clientId, onRoundStart, onRoundEnd });
   }
 
   private startRound({ clientId, onRoundStart, onRoundEnd }: StartRoundParams) {
@@ -188,5 +157,67 @@ export class DuckHuntGameService {
     session.nextRoundTimer = setTimeout(() => {
       this.startRound({ clientId, onRoundStart, onRoundEnd });
     }, delay);
+  }
+
+  public createSession({ clientId }: CreateSessionParams) {
+    const existing = this.sessions.get(clientId);
+    if (existing) return;
+
+    this.sessions.set(clientId, {
+      clientId,
+      currentRound: null,
+      nextRoundTimer: null,
+      endRoundTimer: null,
+      rounds: 0,
+      hits: 0,
+    });
+
+    this.logger.log(`Session created: ${clientId}`);
+  }
+
+  public start({ clientId, onRoundStart, onRoundEnd }: StartGameParams) {
+    const session = this.sessions.get(clientId);
+    if (!session) return;
+    if (session.currentRound) return;
+
+    this.startRound({ clientId, onRoundStart, onRoundEnd });
+  }
+
+  public removeSession({ clientId }: RemoveSessionParams) {
+    const session = this.sessions.get(clientId);
+    if (!session) return;
+
+    this.clearTimers({ clientId });
+    this.sessions.delete(clientId);
+    this.logger.log(`Session removed: ${clientId}`);
+  }
+
+  public hit({ clientId, roundId }: HitParams) {
+    const session = this.sessions.get(clientId);
+    const now = Date.now();
+
+    if (!session || !session.currentRound) {
+      return { roundId, reason: DuckHuntRoundEndReason.NoActiveRound };
+    }
+
+    const round = session.currentRound;
+
+    if (round.roundId !== roundId) {
+      return { roundId, reason: DuckHuntRoundEndReason.NoActiveRound };
+    }
+    if (round.ended) {
+      return { roundId, reason: DuckHuntRoundEndReason.AlreadyEnded };
+    }
+    if (now > round.endsAt) {
+      return { roundId, reason: DuckHuntRoundEndReason.Late };
+    }
+
+    session.hits += 1;
+    this.endRound({
+      clientId,
+      reason: DuckHuntRoundEndReason.Hit,
+    });
+
+    return { roundId, hitAt: now, hits: session.hits };
   }
 }

@@ -4,6 +4,8 @@ export enum DuckHuntTopic {
   RoundStart = 'duck-hunt/round/start',
   RoundEnd = 'duck-hunt/round/end',
   DuckHit = 'duck-hunt/duck/hit',
+  HitConfirmed = 'duck-hunt/hit/confirmed',
+  HitRejected = 'duck-hunt/hit/rejected',
 }
 
 export enum DuckHuntPathDirection {
@@ -14,6 +16,9 @@ export enum DuckHuntPathDirection {
 export enum DuckHuntRoundEndReason {
   Hit = 'hit',
   Timeout = 'timeout',
+  Late = 'late',
+  AlreadyEnded = 'alreadyEnded',
+  NoActiveRound = 'noActiveRound',
 }
 
 export interface DuckHuntPathCoordinates {
