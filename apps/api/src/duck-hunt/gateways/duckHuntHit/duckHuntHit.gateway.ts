@@ -2,6 +2,7 @@ import {
   ConnectedSocket,
   MessageBody,
   SubscribeMessage,
+  WebSocketGateway,
 } from '@nestjs/websockets';
 // import { BaseGateway } from '../base';
 import { WebSocketServer } from '@nestjs/websockets';
@@ -15,7 +16,13 @@ import {
   HitRejectedMessage,
 } from '../../dto';
 
-export class DuckHitGateway {
+@WebSocketGateway({
+  namespace: '/duck-hunt',
+  cors: {
+    origin: '*',
+  },
+})
+export class DuckHuntHitGateway {
   // @WebSocketServer()
   // private server: Server;
   // @SubscribeMessage(DuckHuntTopic.DuckHit)

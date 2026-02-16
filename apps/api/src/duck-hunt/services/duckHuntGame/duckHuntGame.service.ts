@@ -2,7 +2,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { v4 as uuid } from 'uuid';
 import { random } from 'lodash';
 
-import { RoundEndPayload } from '../game/game.types';
 import {
   DuckHuntPathDirection,
   DuckHuntRound,
@@ -176,7 +175,11 @@ export class DuckHuntGameService {
     );
   }
 
-  private scheduleNextRound({ clientId, onRoundStart, onRoundEnd }: ScheduleNextRoundParams) {
+  private scheduleNextRound({
+    clientId,
+    onRoundStart,
+    onRoundEnd,
+  }: ScheduleNextRoundParams) {
     const session = this.sessions.get(clientId);
     if (!session) return;
 
