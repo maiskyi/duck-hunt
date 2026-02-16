@@ -11,7 +11,7 @@ export const Loader: FC = () => {
         styles.default,
       )}
     >
-      Loading...
+      LOADING...
     </div>
   );
 };

@@ -148,8 +148,12 @@
     color: #ffffff;
   }
 
-  &.hit {
+  &.warning {
     color: #ffdd00;
+  }
+
+  &.danger {
+    color: #ff2200;
   }
 
   &.blink {
