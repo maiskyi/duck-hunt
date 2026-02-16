@@ -15,6 +15,7 @@ import {
   HitConfirmedMessage,
   HitRejectedMessage,
 } from '../../dto';
+import { Logger } from '@nestjs/common';
 
 @WebSocketGateway({
   namespace: '/duck-hunt',
@@ -23,15 +24,29 @@ import {
   },
 })
 export class DuckHuntHitGateway {
-  // @WebSocketServer()
-  // private server: Server;
-  // @SubscribeMessage(DuckHuntTopic.DuckHit)
-  // @AsyncApiPub({
-  //   channel: DuckHuntTopic.DuckHit,
-  //   message: {
-  //     payload: DuckHitPayload,
-  //   },
-  // })
+  @WebSocketServer()
+  private server: Server;
+  
+  private logger = new Logger(DuckHuntHitGateway.name, {
+    timestamp: true,
+  });
+
+  @SubscribeMessage(DuckHuntTopic.DuckHit)
+  @AsyncApiPub({
+    channel: DuckHuntTopic.DuckHit,
+    message: {
+      payload: DuckHitPayload,
+    },
+  })
+  public onHit(
+    @MessageBody() body: DuckHitPayload,
+    @ConnectedSocket() client: Socket,
+  ) {
+    this.logger.log(DuckHuntTopic.DuckHit, {
+      body,
+      client,
+    });
+  }
   // public onShoot(
   //   @MessageBody() body: DuckHitPayload,
   //   @ConnectedSocket() client: Socket,
