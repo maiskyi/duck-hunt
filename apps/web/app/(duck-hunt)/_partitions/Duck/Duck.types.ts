@@ -38,6 +38,15 @@ export type DuckInstanceEndHandler = (
   params: DuckInstanceEndHandlerParams,
 ) => void;
 
+export type DuckInstanceMoveHandler = (
+  params: DuckInstanceMoveHandlerParams,
+) => void;
+
+export interface DuckInstanceMoveHandlerParams {
+  roundId: string;
+  path: Models.RoundMessagePath;
+}
+
 export interface DuckInstance {
   fly: DuckInstanceFlyHandler;
   start: DuckInstanceStartHandler;
@@ -46,6 +55,8 @@ export interface DuckInstance {
 
 export interface DuckState {
   roundId: string;
+  x: number;
+  y: number;
   texture: DuckInstanceTexture;
   status: DuckInstanceStatus;
   direction: Models.RoundMessagePathDirection;

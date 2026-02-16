@@ -16,6 +16,7 @@ import {
   DuckInstance,
   DuckInstanceEndHandler,
   DuckInstanceFlyHandler,
+  DuckInstanceMoveHandler,
   DuckInstanceStartHandler,
   DuckInstanceStatus,
   DuckInstanceTexture,
@@ -30,6 +31,8 @@ interface DuckProps {
 export const Duck = forwardRef<DuckInstance, DuckProps>(({ onClick }, ref) => {
   const [state, setState] = useState<DuckState | null>(null);
   const stateRef = useRef<DuckState | null>(null);
+  const moveRafRef = useRef<number | null>(null);
+  const lastTimeRef = useRef<number | null>(null);
 
   stateRef.current = state;
 
@@ -41,16 +44,51 @@ export const Duck = forwardRef<DuckInstance, DuckProps>(({ onClick }, ref) => {
     [state?.status],
   );
 
-  const start: DuckInstanceStartHandler = useCallback(({ path, roundId }) => {
-    console.log("start", { path, roundId });
-    if (stateRef.current?.status === DuckInstanceStatus.Flying) return;
-    setState(() => ({
-      roundId,
-      texture: DuckInstanceTexture.A,
-      status: DuckInstanceStatus.Flying,
-      direction: path.direction,
-    }));
-  }, []);
+  const move: DuckInstanceMoveHandler = useCallback(
+    ({
+      path: {
+        speed,
+        start: { x: startX, y: startY },
+        end: { x: endX, y: endY },
+      },
+    }) => {
+      lastTimeRef.current = null;
+      moveRafRef.current = requestAnimationFrame(function step(timestamp) {
+        if (stateRef.current?.status !== DuckInstanceStatus.Flying) return;
+
+        if (lastTimeRef.current === null) lastTimeRef.current = timestamp;
+        const elapsed = timestamp - lastTimeRef.current;
+        const progress = Math.min(1, elapsed / speed);
+        const x = startX + progress * (endX - startX);
+        const y = startY + progress * (endY - startY);
+
+        setState((prev) => {
+          if (!prev) return null;
+          return { ...prev, x, y };
+        });
+
+        moveRafRef.current = requestAnimationFrame(step);
+      });
+    },
+    [],
+  );
+
+  const start: DuckInstanceStartHandler = useCallback(
+    ({ path, roundId }) => {
+      console.log("start", { path, roundId });
+      if (stateRef.current?.status === DuckInstanceStatus.Flying) return;
+      setState(() => ({
+        roundId,
+        texture: DuckInstanceTexture.A,
+        status: DuckInstanceStatus.Flying,
+        direction: path.direction,
+        x: path.start.x,
+        y: path.start.y,
+      }));
+      move({ path, roundId });
+    },
+    [move],
+  );
 
   const end: DuckInstanceEndHandler = useCallback(({ roundId, path }) => {
     console.log("end", { path, roundId });
@@ -73,15 +111,13 @@ export const Duck = forwardRef<DuckInstance, DuckProps>(({ onClick }, ref) => {
       className={classNames(styles.duck, {
         [`${styles.hit}`]: state.status === DuckInstanceStatus.Hit,
         [`${styles.left}`]:
-          state.direction === Models.RoundMessagePathDirection.LEFT2_RIGHT,
+          state.direction === Models.RoundMessagePathDirection.RIGHT2_LEFT,
       })}
       onClick={state.status === DuckInstanceStatus.Flying ? onClick : undefined}
-      style={
-        {
-          // left: `${duck.position.x}%`,
-          // top: `${Math.max(2, Math.min(duck.position.y, 72))}%`,
-        }
-      }
+      style={{
+        left: `${state.x}%`,
+        top: `${state.y}%`,
+      }}
     >
       <Component />
     </div>
