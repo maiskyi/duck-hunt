@@ -33,6 +33,7 @@ export const Duck = forwardRef<DuckInstance, DuckProps>(({ onClick }, ref) => {
   const stateRef = useRef<DuckState | null>(null);
   const moveRafRef = useRef<number | null>(null);
   const lastTimeRef = useRef<number | null>(null);
+  const textureIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   stateRef.current = state;
 
@@ -77,6 +78,7 @@ export const Duck = forwardRef<DuckInstance, DuckProps>(({ onClick }, ref) => {
     ({ path, roundId }) => {
       console.log("start", { path, roundId });
       if (stateRef.current?.status === DuckInstanceStatus.Flying) return;
+      
       setState(() => ({
         roundId,
         texture: DuckInstanceTexture.A,
@@ -85,6 +87,19 @@ export const Duck = forwardRef<DuckInstance, DuckProps>(({ onClick }, ref) => {
         x: path.start.x,
         y: path.start.y,
       }));
+      
+      textureIntervalRef.current = setInterval(() => {
+        setState((prev) => {
+          if (!prev) return null;
+          return {
+            ...prev,
+            texture:
+              prev.texture === DuckInstanceTexture.A
+                ? DuckInstanceTexture.B
+                : DuckInstanceTexture.A,
+          };
+        });
+      }, 250);
       move({ path, roundId });
     },
     [move],
