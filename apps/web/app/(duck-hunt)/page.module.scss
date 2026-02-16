@@ -124,7 +124,7 @@
     cursor: default;
     transition: none;
     animation: duckFall 1.5s ease-in forwards;
-    filter: drop-shadow(0 0 8px rgba(255,100,0,0.9));
+    filter: drop-shadow(0 0 12px rgba(255, 34, 0, 0.9));
   }
 
   &.left {
@@ -132,14 +132,13 @@
   }
 }
 
-.banner {
+.banner, .loader {
   position: absolute;
   bottom: 160;
   left: 50%;
   transform: translateX(-50%);
   font-family: "Press Start 2P", monospace;
   font-size: 16px;
-  // color: phase === "hit" ? "#ffdd00" : "#ffffff",
   text-shadow: 3px 3px 0 #000;
   pointer-events: none;
   white-space: nowrap;

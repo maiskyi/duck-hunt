@@ -7,11 +7,11 @@ import { useMount } from "react-use";
 
 import { setIsReady } from "../../_slice/duckHunt.slice";
 import { Sounds } from "../../_services/sounds";
-import { Banner } from "../Banner";
+import { Loader } from "../Loader";
 
 export const Initializer: FC<PropsWithChildren> = ({ children }) => {
   const dispatch = useDispatch();
-  
+
   const isReady = useSelector((state: RootState) => state.duckHunt.isReady);
 
   useMount(() => {
@@ -20,9 +20,7 @@ export const Initializer: FC<PropsWithChildren> = ({ children }) => {
     });
   });
 
-  if (!isReady) {
-    return <Banner>Loading...</Banner>;
-  }
+  if (!isReady) return <Loader />;
 
   return <>{children}</>;
 };
