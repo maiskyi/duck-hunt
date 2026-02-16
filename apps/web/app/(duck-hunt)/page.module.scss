@@ -132,6 +132,32 @@
   }
 }
 
+.banner {
+  position: absolute;
+  bottom: 160;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "Press Start 2P", monospace;
+  font-size: 16px;
+  // color: phase === "hit" ? "#ffdd00" : "#ffffff",
+  text-shadow: 3px 3px 0 #000;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 200;
+
+  &.default {
+    color: #ffffff;
+  }
+
+  &.hit {
+    color: #ffdd00;
+  }
+
+  &.blink {
+    animation: blink 0.5s step-end infinite;
+  }
+}
+
 @keyframes blink {
   0%,
   100% {

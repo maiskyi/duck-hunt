@@ -5,11 +5,13 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 export interface DuckHuntState {
   rounds: number;
   hits: number;
+  isReady: boolean;
 }
 
 const initialState: DuckHuntState = {
   rounds: 0,
   hits: 0,
+  isReady: false,
 };
 
 export const duckHuntSlice = createSlice({
