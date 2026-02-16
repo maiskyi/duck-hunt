@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 
 import { GameService } from './services/game';
-import { DuckHuntGateway } from './gateways/duck-hunt';
-import { DuckHuntService } from './services/duck-hunt';
+import { DuckHuntInitGateway } from './gateways/duckHuntInit';
+import { DuckHuntGameService } from './services/duckHuntGame';
 
 @Module({
   controllers: [],
-  providers: [GameService, DuckHuntGateway, DuckHuntService],
+  providers: [GameService, DuckHuntInitGateway, DuckHuntGameService],
 })
 export class DuckHuntModule {}

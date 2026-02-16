@@ -1,1 +1,0 @@
-export { DuckHuntGateway } from './duck-hunt.gateway';

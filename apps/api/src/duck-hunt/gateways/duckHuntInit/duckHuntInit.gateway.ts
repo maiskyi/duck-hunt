@@ -13,11 +13,11 @@ import { AsyncApiPub, AsyncApiSub } from 'nestjs-asyncapi';
 
 import { DuckHuntTopic } from '../../types';
 import { GameStartPayload } from '../../dto';
-import { DuckHuntService } from '../../services/duck-hunt';
+import { DuckHuntGameService } from '../../services/duckHuntGame';
 
-import { GameStatsMessage, RoundStartedEndedMessage } from './duck-hunt.dto';
+import { GameStatsMessage, RoundStartedEndedMessage } from './duckHuntInit.dto';
 
-import type { GameStatsParams,  RoundStartEndParams } from './duck-hunt.types';
+import type { GameStatsParams,  RoundStartEndParams } from './duckHuntInit.types';
 
 @WebSocketGateway({
   namespace: '/duck-hunt',
@@ -25,17 +25,17 @@ import type { GameStatsParams,  RoundStartEndParams } from './duck-hunt.types';
     origin: '*',
   },
 })
-export class DuckHuntGateway
+export class DuckHuntInitGateway
   implements OnGatewayConnection, OnGatewayDisconnect
 {
   @WebSocketServer()
   private server: Server;
 
-  private logger = new Logger(DuckHuntGateway.name, {
+  private logger = new Logger(DuckHuntInitGateway.name, {
     timestamp: true,
   });
 
-  public constructor(private game: DuckHuntService) {}
+  public constructor(private game: DuckHuntGameService) {}
 
   @SubscribeMessage(DuckHuntTopic.GameStart)
   @AsyncApiPub({

@@ -12,10 +12,9 @@ import {
 
 import {
   FLIGHT_DURATION_MS,
-  SHOW_AFTER_HIT_MS,
   NEXT_ROUND_MIN_DELAY_MS,
   NEXT_ROUND_MAX_DELAY_MS,
-} from './duck-hunt.const';
+} from './duckHuntGame.const';
 import {
   ClearTimersParams,
   CreateSessionParams,
@@ -25,13 +24,13 @@ import {
   SessionState,
   StartGameParams,
   StartRoundParams,
-} from './duck-hunt.types';
+} from './duckHuntGame.types';
 
 @Injectable()
-export class DuckHuntService {
+export class DuckHuntGameService {
   private sessions: Map<string, SessionState> = new Map();
 
-  private logger = new Logger(DuckHuntService.name, {
+  private logger = new Logger(DuckHuntGameService.name, {
     timestamp: true,
   });
 
