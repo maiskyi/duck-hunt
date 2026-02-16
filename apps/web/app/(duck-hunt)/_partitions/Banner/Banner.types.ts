@@ -1,7 +1,3 @@
-export enum BannerVariant {
-  Default = "default",
-}
+export type BannerVariant = "default";
 
-export enum BannerAnimation {
-  Blink = "blink",
-}
+export type BannerAnimation = "blink";

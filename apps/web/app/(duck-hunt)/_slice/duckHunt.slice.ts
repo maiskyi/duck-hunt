@@ -25,9 +25,12 @@ export const duckHuntSlice = createSlice({
       state.rounds = action.payload.rounds;
       state.hits = action.payload.hits;
     },
+    setIsReady: (state, action: PayloadAction<boolean>) => {
+      state.isReady = action.payload;
+    },
   },
 });
 
-export const { setStats } = duckHuntSlice.actions;
+export const { setStats, setIsReady } = duckHuntSlice.actions;
 
 export const reducer = duckHuntSlice.reducer;

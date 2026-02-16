@@ -3,7 +3,7 @@ import classNames from "classnames";
 
 import styles from "../../page.module.scss";
 
-import { BannerAnimation, BannerVariant } from "./Banner.types";
+import type { BannerAnimation, BannerVariant } from "./Banner.types";
 
 type BannerProps = PropsWithChildren<{
   variant?: BannerVariant;
@@ -12,7 +12,7 @@ type BannerProps = PropsWithChildren<{
 
 export const Banner: FC<BannerProps> = ({
   children,
-  variant = BannerVariant.Default,
+  variant = "default",
   animation,
 }) => {
   return (
