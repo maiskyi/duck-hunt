@@ -12,6 +12,7 @@ import classNames from "classnames";
 import { Models } from "@repo/ws-client";
 
 import styles from "../../page.module.scss";
+import { Sounds } from "../../_services/sounds";
 
 import {
   DuckInstance,
@@ -90,6 +91,8 @@ export const DuckForwardRefExoticComponent = forwardRef<DuckInstance, DuckProps>
           y: path.start.y,
         }));
 
+        Sounds.play("quack");
+
         textureIntervalRef.current = setInterval(() => {
           setState((prev) => {
             if (!prev) return null;
@@ -118,6 +121,7 @@ export const DuckForwardRefExoticComponent = forwardRef<DuckInstance, DuckProps>
         cancelAnimationFrame(moveRafRef.current);
         moveRafRef.current = null;
       }
+      Sounds.stop("quack");
       setState(() => null);
     }, []);
 

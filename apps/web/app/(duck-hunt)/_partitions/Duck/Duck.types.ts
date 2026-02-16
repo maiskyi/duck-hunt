@@ -60,10 +60,4 @@ export interface DuckState {
   texture: DuckInstanceTexture;
   status: DuckInstanceStatus;
   direction: Models.RoundMessagePathDirection;
-  // position: {
-  //   x: number;
-  //   y: number;
-  // };
-  // direction: "left" | "right";
-  // textureFrame: number;
 }

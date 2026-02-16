@@ -6,6 +6,7 @@ import { RootState } from "@common/store";
 import { useMount } from "react-use";
 
 import { setIsReady } from "../../_slice/duckHunt.slice";
+import { Sounds } from "../../_services/sounds";
 import { Banner } from "../Banner";
 
 export const Initializer: FC<PropsWithChildren> = ({ children }) => {
@@ -14,7 +15,9 @@ export const Initializer: FC<PropsWithChildren> = ({ children }) => {
   const isReady = useSelector((state: RootState) => state.duckHunt.isReady);
 
   useMount(() => {
-    dispatch(setIsReady(true));
+    Sounds.init().then(() => {
+      dispatch(setIsReady(true));
+    });
   });
 
   if (!isReady) {
