@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
 
 // Gateways
-import { DuckHuntInitGateway } from './gateways/duckHuntInit';
-import { DuckHuntHitGateway } from './gateways/duckHuntHit';
+import { DuckHuntInitGateway } from './gateways/duckHunt';
 
 // Services
 import { DuckHuntGameService } from './services/duckHuntGame';
@@ -14,7 +13,6 @@ import { DuckHuntGameService } from './services/duckHuntGame';
     DuckHuntGameService,
     // Gateways
     DuckHuntInitGateway,
-    DuckHuntHitGateway,
   ],
 })
 export class DuckHuntModule {}

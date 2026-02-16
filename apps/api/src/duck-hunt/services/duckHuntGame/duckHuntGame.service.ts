@@ -155,7 +155,11 @@ export class DuckHuntGameService {
     const delay = random(NEXT_ROUND_MIN_DELAY_MS, NEXT_ROUND_MAX_DELAY_MS);
 
     session.nextRoundTimer = setTimeout(() => {
-      this.startRound({ clientId, onRoundStart, onRoundEnd });
+      this.startRound({
+        clientId,
+        onRoundStart,
+        onRoundEnd,
+      });
     }, delay);
   }
 
@@ -180,7 +184,11 @@ export class DuckHuntGameService {
     if (!session) return;
     if (session.currentRound) return;
 
-    this.startRound({ clientId, onRoundStart, onRoundEnd });
+    this.startRound({
+      clientId,
+      onRoundStart,
+      onRoundEnd,
+    });
   }
 
   public removeSession({ clientId }: RemoveSessionParams) {
@@ -197,19 +205,31 @@ export class DuckHuntGameService {
     const now = Date.now();
 
     if (!session || !session.currentRound) {
-      return { roundId, reason: DuckHuntRoundEndReason.NoActiveRound };
+      return {
+        roundId,
+        reason: DuckHuntRoundEndReason.NoActiveRound,
+      };
     }
 
     const round = session.currentRound;
 
     if (round.roundId !== roundId) {
-      return { roundId, reason: DuckHuntRoundEndReason.NoActiveRound };
+      return {
+        roundId,
+        reason: DuckHuntRoundEndReason.NoActiveRound,
+      };
     }
     if (round.ended) {
-      return { roundId, reason: DuckHuntRoundEndReason.AlreadyEnded };
+      return {
+        roundId,
+        reason: DuckHuntRoundEndReason.AlreadyEnded,
+      };
     }
     if (now > round.endsAt) {
-      return { roundId, reason: DuckHuntRoundEndReason.Late };
+      return {
+        roundId,
+        reason: DuckHuntRoundEndReason.Late,
+      };
     }
 
     session.hits += 1;
@@ -218,6 +238,10 @@ export class DuckHuntGameService {
       reason: DuckHuntRoundEndReason.Hit,
     });
 
-    return { roundId, hitAt: now, hits: session.hits };
+    return {
+      roundId,
+      hitAt: now,
+      hits: session.hits,
+    };
   }
 }

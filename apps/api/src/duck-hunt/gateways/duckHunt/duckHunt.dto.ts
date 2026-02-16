@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsString } from 'class-validator';
 
-import { DuckHuntPathDirection } from '../../types';
+import { DuckHuntPathDirection, DuckHuntRoundEndReason } from '../../types';
 
 import type {
   DuckHuntPathCoordinates,
@@ -70,7 +71,6 @@ export class RoundStartedEndedMessage implements DuckHuntRound {
   public readonly path: DuckHuntRoundPath;
 }
 
-
 export class GameStatsMessage {
   @ApiProperty({
     type: Number,
@@ -81,4 +81,27 @@ export class GameStatsMessage {
     type: Number,
   })
   public readonly hits: number;
+}
+
+export class DuckHitPayload {
+  @ApiProperty({
+    description: 'The round ID',
+    example: '123',
+  })
+  @IsString()
+  @IsNotEmpty()
+  public readonly roundId: string;
+}
+
+export class HitConfirmedRejectedMessage {
+  @ApiProperty({
+    type: String,
+  })
+  public readonly roundId: string;
+
+  @ApiProperty({
+    enum: DuckHuntRoundEndReason,
+    enumName: 'DuckHuntRoundEndReason',
+  })
+  public readonly reason: DuckHuntRoundEndReason;
 }

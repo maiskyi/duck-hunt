@@ -15,9 +15,18 @@ import { DuckHuntTopic } from '../../types';
 import { GameStartPayload } from '../../dto';
 import { DuckHuntGameService } from '../../services/duckHuntGame';
 
-import { GameStatsMessage, RoundStartedEndedMessage } from './duckHuntInit.dto';
+import {
+  DuckHitPayload,
+  GameStatsMessage,
+  HitConfirmedRejectedMessage,
+  RoundStartedEndedMessage,
+} from './duckHunt.dto';
 
-import type { GameStatsParams,  RoundStartEndParams } from './duckHuntInit.types';
+import type {
+  GameStatsParams,
+  HitConfirmedRejectedParams,
+  RoundStartEndParams,
+} from './duckHunt.types';
 
 @WebSocketGateway({
   namespace: '/duck-hunt',
@@ -108,6 +117,63 @@ export class DuckHuntInitGateway
   })
   private gameStats({ clientId, ...stats }: GameStatsParams) {
     this.server.to(clientId).emit(DuckHuntTopic.GameStats, stats);
+  }
+
+  @SubscribeMessage(DuckHuntTopic.DuckHit)
+  @AsyncApiPub({
+    channel: DuckHuntTopic.DuckHit,
+    message: {
+      payload: DuckHitPayload,
+    },
+  })
+  public onHit(
+    @MessageBody() { roundId }: DuckHitPayload,
+    @ConnectedSocket() { id: clientId }: Socket,
+  ) {
+    this.logger.log(DuckHuntTopic.DuckHit, {
+      roundId,
+      clientId,
+    });
+    this.game.hit({
+      clientId,
+      roundId,
+    });
+  }
+
+  @AsyncApiSub({
+    channel: DuckHuntTopic.HitConfirmed,
+    message: {
+      payload: HitConfirmedRejectedMessage,
+    },
+  })
+  private hitConfirmed({
+    clientId,
+    roundId,
+    reason,
+  }: HitConfirmedRejectedParams) {
+    this.server.to(clientId).emit(DuckHuntTopic.HitConfirmed, {
+      roundId,
+      reason,
+    });
+    return { ok: true };
+  }
+
+  @AsyncApiSub({
+    channel: DuckHuntTopic.HitRejected,
+    message: {
+      payload: HitConfirmedRejectedMessage,
+    },
+  })
+  private hitRejected({
+    clientId,
+    roundId,
+    reason,
+  }: HitConfirmedRejectedParams) {
+    this.server.to(clientId).emit(DuckHuntTopic.HitRejected, {
+      roundId,
+      reason,
+    });
+    return { ok: true };
   }
 
   public handleConnection({ id: clientId }: Socket) {

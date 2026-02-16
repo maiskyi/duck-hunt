@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AsyncApiDocumentBuilder, AsyncApiModule } from 'nestjs-asyncapi';
+import { ValidationPipe } from '@nestjs/common';
 
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -29,7 +29,7 @@ async function bootstrap() {
 
   const asyncapiDocument = AsyncApiModule.createDocument(app, asyncApiOptions);
 
-  app.getHttpAdapter().get('/asyncapi.json', (req, res) => {
+  app.getHttpAdapter().get('/asyncapi.json', (_, res) => {
     res.type('application/json').send(asyncapiDocument);
   });
 
@@ -40,9 +40,11 @@ async function bootstrap() {
 
 bootstrap()
   .then(() => {
+    // eslint-disable-next-line no-console
     console.log('Server is running on port 3001');
   })
   .catch((error) => {
+    // eslint-disable-next-line no-console
     console.error(error);
     process.exit(1);
   });
