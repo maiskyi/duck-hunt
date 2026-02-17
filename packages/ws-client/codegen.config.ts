@@ -2,6 +2,7 @@
 // import fs from "fs";
 import { TheCodegenConfiguration } from "@the-codegen-project/cli";
 // import lodash from "lodash";
+import { eventsGenerator } from "./generators/events.generator";
 
 const config: TheCodegenConfiguration = {
   inputType: "asyncapi",
@@ -21,6 +22,7 @@ const config: TheCodegenConfiguration = {
       preset: "types",
       outputPath: "./src/__generated__/types",
     },
+    eventsGenerator,
     // {
     //   preset: "custom",
     //   dependencies: ["models", "types"],
