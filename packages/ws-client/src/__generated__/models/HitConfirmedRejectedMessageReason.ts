@@ -1,3 +1,4 @@
+
 enum HitConfirmedRejectedMessageReason {
   HIT = "hit",
   TIMEOUT = "timeout",

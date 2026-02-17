@@ -1,4 +1,4 @@
-import { RoundMessagePath } from "./RoundMessagePath";
+import {RoundMessagePath} from './RoundMessagePath';
 interface RoundStartedEndedMessage {
   roundId: string;
   startedAt: number;
@@ -7,4 +7,4 @@ interface RoundStartedEndedMessage {
   path: RoundMessagePath;
   additionalProperties?: Map<string, any>;
 }
-export type { RoundStartedEndedMessage };
+export type { RoundStartedEndedMessage }; 

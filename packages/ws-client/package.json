@@ -7,7 +7,7 @@
   },
   "scripts": {
     "lint": "tsc --noEmit &&eslint . --max-warnings 0 --fix",
-    "gen:client": "curl -o src/asyncapi.json http://localhost:3001/asyncapi.json -H 'Accept: application/json' && codegen generate ./codegen.config.ts"
+    "gen:client": "rm -rf src/__generated__ && curl -o src/asyncapi.json http://localhost:3001/asyncapi.json -H 'Accept: application/json' && codegen generate ./codegen.config.ts"
   },
   "devDependencies": {
     "@repo/eslint-config": "*",

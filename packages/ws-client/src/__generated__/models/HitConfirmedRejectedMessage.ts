@@ -1,4 +1,4 @@
-import { HitConfirmedRejectedMessageReason } from "./HitConfirmedRejectedMessageReason";
+import {HitConfirmedRejectedMessageReason} from './HitConfirmedRejectedMessageReason';
 interface HitConfirmedRejectedMessage {
   roundId: string;
   reason: HitConfirmedRejectedMessageReason;

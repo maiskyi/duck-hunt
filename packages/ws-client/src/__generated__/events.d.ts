@@ -1,9 +1,9 @@
 import "use-socket-io-react";
-import { GameStartPayload } from "./__generated__/models/GameStartPayload";
-import { RoundStartedEndedMessage } from "./__generated__/models/RoundStartedEndedMessage";
-import { GameStatsMessage } from "./__generated__/models/GameStatsMessage";
-import { HitConfirmedRejectedMessage } from "./__generated__/models/HitConfirmedRejectedMessage";
-import { DuckHitPayload } from "./__generated__/models/DuckHitPayload";
+import { RoundStartedEndedMessage } from "./models/RoundStartedEndedMessage";
+import { GameStatsMessage } from "./models/GameStatsMessage";
+import { HitConfirmedRejectedMessage } from "./models/HitConfirmedRejectedMessage";
+import { GameStartPayload } from "./models/GameStartPayload";
+import { DuckHitPayload } from "./models/DuckHitPayload";
 
 declare module "use-socket-io-react" {
   interface ServerToClientEvents {

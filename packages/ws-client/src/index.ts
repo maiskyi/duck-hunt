@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
-/// <reference path="./env.d.ts" />
+/// <reference path="./__generated__/events.d.ts" />
 
 // Components
 export * from "./components/WsClientProvider";

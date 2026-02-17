@@ -1,3 +1,4 @@
+
 interface GameStatsMessage {
   rounds: number;
   hits: number;
