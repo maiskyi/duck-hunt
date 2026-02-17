@@ -1,135 +1,200 @@
-# Turborepo starter
+# Duck Hunt
 
-This Turborepo starter is maintained by the Turborepo core team.
+This project was implemented as part of a UI assignment. The goal of the implementation was not only to satisfy functional requirements but also to demonstrate architectural decisions focused on scalability, maintainability, and performance in a real-time UI environment.
 
-## Using this example
+---
 
-Run the following command:
+## Table of Contents
 
-```sh
-npx create-turbo@latest
-```
+- [Overview](#overview)
+- [Architecture Overview](#architecture-overview)
+- [Monorepo Structure](#monorepo-structure)
+- [Backend Architecture](#backend-architecture)
+- [WebSocket Client Architecture](#websocket-client-architecture)
+- [Frontend Architecture](#frontend-architecture)
+- [Architecture Summary](#architecture-summary)
+- [Running the Project](#running-the-project)
 
-## What's inside?
+---
 
-This Turborepo includes the following packages/apps:
+## Overview
 
-### Apps and Packages
+The application implements a simplified Duck Hunt game using a real-time communication model between frontend and backend.
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+The implementation focuses on:
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+- clear separation of responsibilities
+- contract-driven communication
+- predictable state management
+- performance-oriented rendering decisions
+- extensibility for future real-time scenarios
 
-### Utilities
+While the assignment scope is relatively small, the architecture reflects patterns commonly used in production-scale UI systems.
 
-This Turborepo has some additional tools already setup for you:
+## Architecture Overview
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+The solution is implemented as a **monorepo** using **Turborepo**, allowing frontend and backend applications to coexist while sharing abstractions and contracts.
 
-### Build
+The main goals of this approach are:
 
-To build all apps and packages, run the following command:
+- separation of frontend and backend concerns
+- reusable abstractions
+- simplified dependency management
+- scalability without structural refactoring
 
-```
-cd my-turborepo
+Even within a small assignment scope, this structure enables future growth without architectural changes.
 
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
+---
 
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
-```
-
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+## Monorepo Structure
 
 ```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+apps/
+├── web/          # Frontend application (React)
+└── api/          # Backend service (NestJS + Socket.IO)
 
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
+packages/
+└── ws-client/    # Shared WebSocket client abstraction with strict types definitions
 ```
 
-### Develop
 
-To develop all apps and packages, run the following command:
+This structure ensures synchronization between client and server contracts and reduces duplication across applications.
 
+---
+
+## Backend Architecture
+
+The backend is implemented using **NestJS** with **Socket.IO**, following the real-time communication requirements of the assignment.
+
+### WebSocket Namespace Design
+
+A dedicated game namespace was introduced to isolate game-related events.
+
+Benefits of this approach:
+
+- clients subscribe only to relevant events
+- reduced unnecessary event handling
+- logical separation of real-time modules
+- improved scalability for future features
+
+This mirrors production-grade real-time architectures where event isolation prevents cross-feature coupling.
+
+### Event Contracts and AsyncAPI Specification
+
+All WebSocket events are described using the **AsyncAPI specification**, which serves as the single source of truth for communication contracts.
+
+This enables:
+
+- strongly typed client ↔ server communication
+- automatic generation of data contracts
+- consistent event definitions
+- reduced integration errors
+
+Both communication directions are explicitly defined:
+
+- client → server events (user actions)
+- server → client events (game updates and state changes)
+
+---
+
+## WebSocket Client Architecture
+
+A dedicated WebSocket client abstraction was introduced on the frontend to decouple UI components from transport-level details.
+
+### Contract-Driven Client
+
+The client is generated based on the AsyncAPI specification, providing:
+
+- typed event definitions
+- synchronized payload contracts
+- compile-time validation
+- improved developer experience
+
+This prevents contract drift between frontend and backend and simplifies future refactoring.
+
+### Abstraction Layer
+
+UI components do not interact directly with Socket.IO. Instead, they communicate through a typed abstraction layer, allowing:
+
+- transport replacement if needed
+- centralized connection management
+- extension with middleware or logging
+- easier testing
+
+For development speed, a lightweight React integration library with a `useSocket`-style API was used. The goal at this stage was to demonstrate architectural flexibility rather than transport-level optimization.
+
+---
+
+## Frontend Architecture
+
+The frontend integrates the typed WebSocket client and subscribes only to the relevant game namespace.
+
+### State Management Strategy
+
+Redux was used as required by the assignment. The main architectural focus was defining **what belongs in global state**.
+
+The Redux store contains only global, long-lived state:
+
+- score
+- shared UI flags
+
+### State Localization and Performance Considerations
+
+Highly dynamic or frame-dependent state is intentionally localized within components, including:
+
+- duck flight movement
+- cursor movement
+- animation-related states
+
+Storing such data in the global store would cause unnecessary selector recalculations and potential performance issues in larger applications.
+
+By localizing transient state:
+
+- global updates remain minimal
+- re-renders are limited to affected components
+- the application scales better as complexity grows
+
+This follows a common production pattern where Redux manages shared state, while ephemeral UI state remains local.
+
+---
+
+## Architecture Summary
+
+The implementation demonstrates an architectural approach focused on long-term maintainability rather than short-term implementation simplicity.
+
+Key principles:
+
+- clear separation between UI, logic, and communication layers
+- contract-driven development via AsyncAPI
+- performance-oriented state management
+- rendering strategy aligned with browser mechanics
+- scalable structure suitable for future extensions
+
+Although the application itself is simple, the architecture allows straightforward evolution toward more complex real-time scenarios such as multiplayer gameplay or additional real-time modules.
+
+---
+
+## Running the Project
+
+### Prerequisites
+
+- Node.js 24+
+- Yarn
+
+### Installation
+
+Install dependencies from the project root:
+
+```bash
+yarn install
 ```
-cd my-turborepo
 
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
+### Start Development Environment
 
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
+Run frontend and backend in development mode:
+
+```bash
+yarn dev
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+This command starts all applications defined in the Turborepo pipeline.
