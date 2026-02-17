@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { v4 as uuid } from 'uuid';
-import { random } from 'lodash';
+import { noop, random } from 'lodash';
 
 import {
   DuckHuntPathDirection,
@@ -15,6 +15,7 @@ import {
   NEXT_ROUND_MAX_DELAY_MS,
 } from './duckHunt.const';
 import {
+  BindHandlersParams,
   ClearTimersParams,
   CreateSessionParams,
   EndRoundParams,
@@ -24,6 +25,7 @@ import {
   SessionState,
   StartGameParams,
   StartRoundParams,
+  OnRoundStartEndHandler,
 } from './duckHunt.types';
 
 @Injectable()
@@ -33,6 +35,10 @@ export class DuckHuntService {
   private logger = new Logger(DuckHuntService.name, {
     timestamp: true,
   });
+
+  private onRoundStart: OnRoundStartEndHandler = noop;
+
+  private onRoundEnd: OnRoundStartEndHandler = noop;
 
   private clearTimers({ clientId }: ClearTimersParams) {
     const session = this.sessions.get(clientId);
@@ -66,7 +72,7 @@ export class DuckHuntService {
     };
   }
 
-  private startRound({ clientId, onRoundStart, onRoundEnd }: StartRoundParams) {
+  private startRound({ clientId }: StartRoundParams) {
     const session = this.sessions.get(clientId);
     if (!session) return;
 
@@ -92,7 +98,7 @@ export class DuckHuntService {
 
     this.logger.log(`Round started for ${clientId}: ${roundId}`);
 
-    onRoundStart?.({
+    this.onRoundStart({
       clientId,
       round,
       rounds: session.rounds,
@@ -107,17 +113,14 @@ export class DuckHuntService {
       this.endRound({
         clientId,
         reason: DuckHuntRoundEndReason.Timeout,
-        onRoundEnd,
       });
       this.scheduleNextRound({
         clientId,
-        onRoundStart,
-        onRoundEnd,
       });
     }, FLIGHT_DURATION_MS);
   }
 
-  private endRound({ clientId, reason, onRoundEnd }: EndRoundParams) {
+  private endRound({ clientId, reason }: EndRoundParams) {
     const session = this.sessions.get(clientId);
     if (!session?.currentRound) return;
 
@@ -132,7 +135,7 @@ export class DuckHuntService {
       session.endRoundTimer = null;
     }
 
-    onRoundEnd?.({
+    this.onRoundEnd({
       clientId,
       round,
       rounds: session.rounds,
@@ -144,11 +147,7 @@ export class DuckHuntService {
     );
   }
 
-  private scheduleNextRound({
-    clientId,
-    onRoundStart,
-    onRoundEnd,
-  }: ScheduleNextRoundParams) {
+  private scheduleNextRound({ clientId }: ScheduleNextRoundParams) {
     const session = this.sessions.get(clientId);
     if (!session) return;
 
@@ -157,8 +156,6 @@ export class DuckHuntService {
     session.nextRoundTimer = setTimeout(() => {
       this.startRound({
         clientId,
-        onRoundStart,
-        onRoundEnd,
       });
     }, delay);
   }
@@ -179,15 +176,13 @@ export class DuckHuntService {
     this.logger.log(`Session created: ${clientId}`);
   }
 
-  public start({ clientId, onRoundStart, onRoundEnd }: StartGameParams) {
+  public start({ clientId }: StartGameParams) {
     const session = this.sessions.get(clientId);
     if (!session) return;
     if (session.currentRound) return;
 
     this.startRound({
       clientId,
-      onRoundStart,
-      onRoundEnd,
     });
   }
 
@@ -200,7 +195,7 @@ export class DuckHuntService {
     this.logger.log(`Session removed: ${clientId}`);
   }
 
-  public hit({ clientId, roundId, onRoundStart, onRoundEnd }: HitParams) {
+  public hit({ clientId, roundId }: HitParams) {
     const session = this.sessions.get(clientId);
     const now = Date.now();
 
@@ -239,17 +234,8 @@ export class DuckHuntService {
       reason: DuckHuntRoundEndReason.Hit,
     });
 
-    onRoundEnd?.({
-      clientId,
-      round,
-      rounds: session.rounds,
-      hits: session.hits,
-    });
-
     this.scheduleNextRound({
       clientId,
-      onRoundStart,
-      onRoundEnd,
     });
 
     return {
@@ -257,5 +243,10 @@ export class DuckHuntService {
       reason: DuckHuntRoundEndReason.Hit,
       hits: session.hits,
     };
+  }
+
+  public bindHandlers({ onRoundStart, onRoundEnd }: BindHandlersParams) {
+    this.onRoundStart = onRoundStart ?? this.onRoundStart;
+    this.onRoundEnd = onRoundEnd ?? this.onRoundEnd;
   }
 }

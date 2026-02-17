@@ -17,21 +17,24 @@ export interface RemoveSessionParams {
   clientId: string;
 }
 
-interface OnRoundStartedEndedCallbackParams {
+interface OnRoundStartEndParams {
   clientId: string;
   round: DuckHuntRound;
   rounds: number;
   hits: number;
 }
 
-type OnRoundStartedEndedCallback = (
-  params: OnRoundStartedEndedCallbackParams,
+export type OnRoundStartEndHandler= (
+  params: OnRoundStartEndParams,
 ) => void;
+
+export interface BindHandlersParams {
+  onRoundStart?: OnRoundStartEndHandler;
+  onRoundEnd?: OnRoundStartEndHandler;
+}
 
 export interface StartRoundParams {
   clientId: string;
-  onRoundStart?: OnRoundStartedEndedCallback;
-  onRoundEnd?: OnRoundStartedEndedCallback;
 }
 
 export interface ClearTimersParams {
@@ -41,24 +44,17 @@ export interface ClearTimersParams {
 export interface EndRoundParams {
   clientId: string;
   reason: DuckHuntRoundEndReason;
-  onRoundEnd?: OnRoundStartedEndedCallback;
 }
 
 export interface ScheduleNextRoundParams {
   clientId: string;
-  onRoundStart?: OnRoundStartedEndedCallback;
-  onRoundEnd?: OnRoundStartedEndedCallback;
 }
 
 export interface StartGameParams {
   clientId: string;
-  onRoundStart?: OnRoundStartedEndedCallback;
-  onRoundEnd?: OnRoundStartedEndedCallback;
 }
 
 export interface HitParams {
   clientId: string;
   roundId: string;
-  onRoundStart?: OnRoundStartedEndedCallback;
-  onRoundEnd?: OnRoundStartedEndedCallback;
 }

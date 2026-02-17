@@ -46,7 +46,12 @@ export class DuckHuntInitGateway
     timestamp: true,
   });
 
-  public constructor(private game: DuckHuntService) {}
+  public constructor(private game: DuckHuntService) {
+    this.game.bindHandlers({
+      onRoundStart: this.onRoundStart.bind(this),
+      onRoundEnd: this.onRoundEnd.bind(this),
+    });
+  }
 
   private onRoundStart({ round, clientId, rounds, hits }: OnRoundStartParams) {
     this.roundStart({
@@ -89,28 +94,6 @@ export class DuckHuntInitGateway
     });
     this.game.start({
       clientId,
-      onRoundStart: ({ round, clientId, rounds, hits }) => {
-        this.roundStart({
-          round,
-          clientId,
-        });
-        this.gameStats({
-          clientId,
-          rounds,
-          hits,
-        });
-      },
-      onRoundEnd: ({ round, clientId, rounds, hits }) => {
-        this.roundEnd({
-          round,
-          clientId,
-        });
-        this.gameStats({
-          clientId,
-          rounds,
-          hits,
-        });
-      },
     });
     return { ok: true };
   }
@@ -163,28 +146,6 @@ export class DuckHuntInitGateway
     const result = this.game.hit({
       clientId,
       roundId,
-      onRoundStart: ({ round, clientId, rounds, hits }) => {
-        this.roundStart({
-          round,
-          clientId,
-        });
-        this.gameStats({
-          clientId,
-          rounds,
-          hits,
-        });
-      },
-      onRoundEnd: ({ round, clientId, rounds, hits }) => {
-        this.roundEnd({
-          round,
-          clientId,
-        });
-        this.gameStats({
-          clientId,
-          rounds,
-          hits,
-        });
-      },
     });
     if (result.reason === DuckHuntRoundEndReason.Hit) {
       this.hitConfirmed({
