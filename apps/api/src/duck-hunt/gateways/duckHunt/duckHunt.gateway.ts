@@ -12,7 +12,6 @@ import { Logger } from '@nestjs/common';
 import { AsyncApiPub, AsyncApiSub } from 'nestjs-asyncapi';
 
 import { DuckHuntRoundEndReason, DuckHuntTopic } from '../../types';
-import { GameStartPayload } from '../../dto';
 import { DuckHuntService } from '../../services/duckHunt';
 
 import {
@@ -20,6 +19,7 @@ import {
   GameStatsMessage,
   HitConfirmedRejectedMessage,
   RoundStartedEndedMessage,
+  GameStartPayload,
 } from './duckHunt.dto';
 
 import type {

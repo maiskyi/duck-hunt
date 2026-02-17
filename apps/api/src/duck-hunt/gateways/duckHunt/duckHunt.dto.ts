@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 import { DuckHuntPathDirection, DuckHuntRoundEndReason } from '../../types';
 
@@ -104,4 +104,13 @@ export class HitConfirmedRejectedMessage {
     enumName: 'DuckHuntRoundEndReason',
   })
   public readonly reason: DuckHuntRoundEndReason;
+}
+
+export class GameStartPayload {
+  @ApiProperty({
+    type: Number,
+  })
+  @IsNumber()
+  @IsNotEmpty()
+  public readonly timestamp: number;
 }
