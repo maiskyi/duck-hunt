@@ -73,7 +73,6 @@ export const DuckForwardRefExoticComponent = forwardRef<
 
   const start: DuckInstanceStartHandler = useCallback(
     ({ path, roundId }) => {
-      console.log("start", { path, roundId });
       if (stateRef.current?.status === DuckInstanceStatus.Flying) return;
 
       setState(() => ({
@@ -104,8 +103,7 @@ export const DuckForwardRefExoticComponent = forwardRef<
     [move],
   );
 
-  const end: DuckInstanceEndHandler = useCallback(({ roundId, path }) => {
-    console.log("end", { path, roundId });
+  const end: DuckInstanceEndHandler = useCallback(() => {
     if (stateRef.current?.status !== DuckInstanceStatus.Flying) return;
     if (textureIntervalRef.current) {
       clearInterval(textureIntervalRef.current);
