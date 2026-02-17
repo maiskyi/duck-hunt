@@ -16,3 +16,17 @@ export interface HitConfirmedRejectedParams {
   roundId: string;
   reason: DuckHuntRoundEndReason;
 }
+
+export interface OnRoundStartParams {
+  clientId: string;
+  round: DuckHuntRound;
+  rounds: number;
+  hits: number;
+}
+
+export interface OnRoundEndParams {
+  clientId: string;
+  round: DuckHuntRound;
+  rounds: number;
+  hits: number;
+}

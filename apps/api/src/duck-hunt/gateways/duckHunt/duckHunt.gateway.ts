@@ -13,7 +13,7 @@ import { AsyncApiPub, AsyncApiSub } from 'nestjs-asyncapi';
 
 import { DuckHuntRoundEndReason, DuckHuntTopic } from '../../types';
 import { GameStartPayload } from '../../dto';
-import { DuckHuntGameService } from '../../services/duckHuntGame';
+import { DuckHuntService } from '../../services/duckHunt';
 
 import {
   DuckHitPayload,
@@ -25,6 +25,8 @@ import {
 import type {
   GameStatsParams,
   HitConfirmedRejectedParams,
+  OnRoundEndParams,
+  OnRoundStartParams,
   RoundStartEndParams,
 } from './duckHunt.types';
 
@@ -44,7 +46,31 @@ export class DuckHuntInitGateway
     timestamp: true,
   });
 
-  public constructor(private game: DuckHuntGameService) {}
+  public constructor(private game: DuckHuntService) {}
+
+  private onRoundStart({ round, clientId, rounds, hits }: OnRoundStartParams) {
+    this.roundStart({
+      round,
+      clientId,
+    });
+    this.gameStats({
+      clientId,
+      rounds,
+      hits,
+    });
+  }
+
+  private onRoundEnd({ round, clientId, rounds, hits }: OnRoundEndParams) {
+    this.roundEnd({
+      round,
+      clientId,
+    });
+    this.gameStats({
+      clientId,
+      rounds,
+      hits,
+    });
+  }
 
   @SubscribeMessage(DuckHuntTopic.GameStart)
   @AsyncApiPub({

@@ -4,13 +4,13 @@ import { Module } from '@nestjs/common';
 import { DuckHuntInitGateway } from './gateways/duckHunt';
 
 // Services
-import { DuckHuntGameService } from './services/duckHuntGame';
+import { DuckHuntService } from './services/duckHunt';
 
 @Module({
   controllers: [],
   providers: [
     // Services
-    DuckHuntGameService,
+    DuckHuntService,
     // Gateways
     DuckHuntInitGateway,
   ],
